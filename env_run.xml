@@ -252,7 +252,7 @@
       timing tests.
     </desc>
     </entry>
-    <entry id="JOB_IDS" value="case.run:2744289.chadmin1.ib0.cheyenne.ucar.edu, case.st_archive:2744290.chadmin1.ib0.cheyenne.ucar.edu">
+    <entry id="JOB_IDS" value="case.run:2753515.chadmin1.ib0.cheyenne.ucar.edu, case.st_archive:2753517.chadmin1.ib0.cheyenne.ucar.edu">
       <type>char</type>
       <desc>List of job ids for most recent case.submit</desc>
     </entry>
@@ -1131,7 +1131,7 @@
         <value compclass="LND">FALSE</value>
       </values>
     </entry>
-    <entry id="DATA_ASSIMILATION_CYCLES" value="124">
+    <entry id="DATA_ASSIMILATION_CYCLES" value="120">
       <type>integer</type>
       <valid_values/>
       <desc> Number of model run - data assimilation steps to complete </desc>
