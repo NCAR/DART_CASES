@@ -54,7 +54,7 @@ source data_scripts.csh
 
 set comp_cmd      = 'gzip '
 # set comp_cmd      = 'gzip -k'
-set ymds          = 2016-08-01-00000
+set ymds          = 2018-10-01-00000
 set data_dir      = ${data_DOUT_S_ROOT}/rest/${ymds}
 
 # set sets          = (cpl)

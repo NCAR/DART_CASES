@@ -88,7 +88,8 @@ echo Copy $SRC_DIR to campaign storage $CS_DIR >>& $glog
 # For example 
 # > globus endpoint activate --help
 # will show obscura such as --myproxy (below).
-module load gnu python
+# module load gnu python
+module load gnu python/3.6.8
 
 # Enable the NCAR Python Library (NPL) virtual environment 
 # This command activates the 'globus' command
