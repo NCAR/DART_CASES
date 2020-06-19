@@ -48,9 +48,9 @@
 #SBATCH -e %x_%j.eo 
 # 80 members
 # restarts (actually CLM hist) #SBATCH --ntasks=160 
-# forcing files: 
-#SBATCH --ntasks=405 
-# partial history set (8 members x 2 types) #SBATCH --ntasks=16
+# forcing files: #SBATCH --ntasks=405 
+# partial history set (8 members x 2 types) 
+#SBATCH --ntasks=80
 # 3 members; 
 # #SBATCH --ntasks=15 
 # #SBATCH --ntasks=1 
@@ -121,10 +121,10 @@ endif
 # do_history     => nens * MAX(# history file types.  Currently 2 (CLM))
 # do_state_space => 1  (Could be upgraded to use #rest_dates(4-5) * #stats(4))
 
-set do_forcing     = 'true'
+set do_forcing     = 'false'
 # > > > WARNING; if restarts fails when $mm-01 is a Monday, turn off the pre_clean flag,
 #                in order to preserve what's in rest/YYYY-MM.
-set do_restarts    = 'true'
+set do_restarts    = 'false'
 set do_obs_space   = 'false'
 set do_history     = 'true'
 set do_state_space = 'true'
@@ -136,7 +136,7 @@ set pr_used = `echo $line[2] | cut -d'.' -f1`
 # Round it up to be safe.
 @ pr_used++
 if (do_forcing == 'true') then
-   @ pr_need = $pr_used + 1
+   @ pr_need = $pr_used + 2
    if ($pr_need > 20) then
       echo "ERROR; not enough project space to run this"
       exit 2
@@ -664,7 +664,9 @@ if ($do_history == true) then
             set ls_status = $status
             if ($ls_status == 0) then
                if (! -d Previous) mkdir -p Previous
-               mv ${data_CASE}.$models[$m]_${INST}.*.${data_year}.nc Previous 
+# lnd.h1 recovery; already moved
+               if ($components[$m] != 'lnd') then
+                  mv ${data_CASE}.$models[$m]_${INST}.*.${data_year}.nc Previous 
             else
                ls Previous/${data_CASE}.$models[$m]_${INST}.*.${data_year}.nc >& /dev/null
                set ls_status = $status
@@ -720,6 +722,8 @@ if ($do_history == true) then
       # The number of history files = SUM(data_NINST * hist_types_this_comp * dates_this_type)
       @ tasks = 0
       @ type = 0
+# Recover lnd.h1 (h0 already done)
+      if ($components[$m] == 'lnd') @ type = 1
       while ($type < 10)
          # This learns when there are no more h# types to process.
          # All the desired dates for this type will be appended 
