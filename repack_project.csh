@@ -41,8 +41,8 @@
 #SBATCH --job-name=repack_project
 # Output standard output and error to a file named with 
 # the job-name and the jobid.
-#SBATCH -o %x_%j_2017.eo 
-#SBATCH -e %x_%j_2017.eo 
+#SBATCH -o %x_%j_2018.eo 
+#SBATCH -e %x_%j_2018.eo 
 # 80 members (1 type at a time)
 #SBATCH --ntasks=80 
 #SBATCH --time=04:00:00
