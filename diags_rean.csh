@@ -46,6 +46,10 @@ else
 #    endif
 endif
 
+# Comments to separate multiple job output that's sent to the same diags_rean.eo file.
+echo "==========================================="
+echo "Running obs_diag and tarring obs_seq.finals on `date`"
+
 if (! -f data_scripts.csh) then
    echo "ERROR: no data_scripts.csh.  Submit from the CASEROOT directory"
    exit
