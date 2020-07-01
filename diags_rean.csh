@@ -22,6 +22,8 @@
 #PBS  -o diags_rean.eo
 #PBS  -j oe 
 #PBS  -k eod 
+# #PBS  -W depend=afterok:2932435.chadmin1.ib0.cheyenne.ucar.edu
+
 #--------------------------------------------
 
 # obs_diag can now take a namelist argument that specifies a file
