@@ -173,7 +173,7 @@ endif
 # "data_proj_space" will be created as needed (assuming user has permission to write there).
 # > > > WARNING: if the first day of the month is a Monday,
 #       I need to add *_0001.log* files from $archive/logs to rest/YYYY-MM-01-00000
-#       and remove the rpointer and .h0. files.
+#       and remove the rpointer and .h0. files.  Also compress the .r. files.
 set yr_mo = `printf %4d-%02d ${data_year} ${data_month}`
 set obs_space  = Diags_NTrS_${yr_mo}
 
