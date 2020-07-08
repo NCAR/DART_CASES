@@ -85,11 +85,11 @@
       <valid_values>TRUE,FALSE</valid_values>
       <desc>whether the PROJECT value is required on this machine</desc>
     </entry>
-    <entry id="CHARGE_ACCOUNT" value="NCIS0006">
+    <entry id="CHARGE_ACCOUNT" value="P86850054">
       <type>char</type>
       <desc>project to charge in scripts if different from PROJECT</desc>
     </entry>
-    <entry id="PROJECT" value="NCIS0006">
+    <entry id="PROJECT" value="P86850054">
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
@@ -138,11 +138,11 @@
       <valid_values>TRUE,FALSE</valid_values>
       <desc>whether the PROJECT value is required on this machine</desc>
     </entry>
-    <entry id="CHARGE_ACCOUNT" value="NCIS0006">
+    <entry id="CHARGE_ACCOUNT" value="P86850054">
       <type>char</type>
       <desc>project to charge in scripts if different from PROJECT</desc>
     </entry>
-    <entry id="PROJECT" value="NCIS0006">
+    <entry id="PROJECT" value="P86850054">
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
