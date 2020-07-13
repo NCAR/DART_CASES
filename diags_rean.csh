@@ -5,8 +5,8 @@
 # http://www.image.ucar.edu/DAReS/DART/DART_download
 #
 #PBS  -N diags_rean
-#PBS  -A NCIS0006
-# #PBS  -A P86850054
+# #PBS  -A NCIS0006
+#PBS  -A P86850054
 #PBS  -q share
 # Resources I want:
 #    select=#nodes
@@ -22,7 +22,7 @@
 #PBS  -o diags_rean.eo
 #PBS  -j oe 
 #PBS  -k eod 
-# #PBS  -W depend=afterok:2932435.chadmin1.ib0.cheyenne.ucar.edu
+# #PBS  -W depend=afterok:3047237.chadmin1.ib0.cheyenne.ucar.edu
 
 #--------------------------------------------
 

@@ -58,8 +58,8 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=raeder@ucar.edu
-# #SBATCH --account=P86850054
-#SBATCH --account=NCIS0006
+#SBATCH --account=P86850054
+# #SBATCH --account=NCIS0006
 #SBATCH --partition=dav
 #SBATCH --ignore-pbs
 # 

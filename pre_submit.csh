@@ -148,7 +148,7 @@ echo "$cycles cycles will be distributed among $resubmissions +1 jobs"
 # 12 hours: @ job_minutes = 720
 
 # @ job_minutes = ( $cycles_per_job * 7 ) + 10 
-@ job_minutes = 16 * 60
+@ job_minutes = 12 * 60
 @ wall_hours  = $job_minutes / 60
 @ wall_mins   = $job_minutes % 60
 set wall_time = `printf %02d:%02d $wall_hours $wall_mins`
