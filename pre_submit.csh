@@ -155,11 +155,11 @@ set wall_time = `printf %02d:%02d $wall_hours $wall_mins`
 echo "Changing run time to $wall_time in env_batch.xml"
 
 if ($#argv == 3) then
-   echo "Seeing if time span will fit in 16:00:00"
+   echo "Seeing if time span will fit in 12:00:00"
    exit 80
 endif
 if ($job_minutes > 960) then
-   echo "ERROR: too many cycles requested.  Limit wall clock is 16:00:00"
+   echo "ERROR: too many cycles requested.  Limit wall clock is 12:00:00"
    exit 90
 endif
 
