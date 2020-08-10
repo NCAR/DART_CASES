@@ -371,9 +371,9 @@
   stream_domtvarname = "time"
   stream_domxvarname = "xc"
   stream_domyvarname = "yc"
-  stream_fldfilename = "/glade/work/raeder/Models/CAM_init/SST/avhrr-only-v2.2011-2019_0Z_filled_c200219.nc"
+  stream_fldfilename = "/glade/work/raeder/Models/CAM_init/SST/avhrr-only-v2.2011-202001_0Z_filled_c200810.nc"
   stream_fldvarname = "ice_cov"
   stream_mapread = "NOT_SET"
   stream_year_first = 2011
-  stream_year_last = 2019
+  stream_year_last = 2020
 /

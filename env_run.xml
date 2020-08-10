@@ -252,7 +252,7 @@
       timing tests.
     </desc>
     </entry>
-    <entry id="JOB_IDS" value="case.run:3220226.chadmin1.ib0.cheyenne.ucar.edu, case.st_archive:3220227.chadmin1.ib0.cheyenne.ucar.edu">
+    <entry id="JOB_IDS" value="case.run:3465170.chadmin1.ib0.cheyenne.ucar.edu, case.st_archive:3465171.chadmin1.ib0.cheyenne.ucar.edu">
       <type>char</type>
       <desc>List of job ids for most recent case.submit</desc>
     </entry>
@@ -1131,7 +1131,7 @@
         <value compclass="LND">FALSE</value>
       </values>
     </entry>
-    <entry id="DATA_ASSIMILATION_CYCLES" value="124">
+    <entry id="DATA_ASSIMILATION_CYCLES" value="4">
       <type>integer</type>
       <valid_values/>
       <desc> Number of model run - data assimilation steps to complete </desc>
@@ -1378,7 +1378,7 @@
     Sets SST and ice coverage stream name.
     This is only used when DOCN_MODE=prescribed.</desc>
     </entry>
-    <entry id="SSTICE_DATA_FILENAME" value="/glade/work/raeder/Models/CAM_init/SST/avhrr-only-v2.2011-2019_0Z_filled_c200219.nc">
+    <entry id="SSTICE_DATA_FILENAME" value="/glade/work/raeder/Models/CAM_init/SST/avhrr-only-v2.2011-202001_0Z_filled_c200810.nc">
       <type>char</type>
       <valid_values/>
       <desc>Prescribed SST and ice coverage data file name.
@@ -1418,7 +1418,7 @@
     years 0-9 in the file will not be used.
     This is only used when DOCN_MODE=prescribed.</desc>
     </entry>
-    <entry id="SSTICE_YEAR_END" value="2019">
+    <entry id="SSTICE_YEAR_END" value="2020">
       <type>integer</type>
       <valid_values/>
       <desc>The last year of data to use from SSTICE_DATA_FILENAME.
