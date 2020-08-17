@@ -1307,6 +1307,16 @@ else     # CONTINUE_RUN == FALSE
    echo "All files set to run the FIRST experiment step using (ref)time" $init_time
 
 endif
+
+ls *inf*${restart_time}* >& /dev/null
+if ($status != 0) then 
+   echo ""
+   echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+   echo "WARNING:  no inflation files were fond for \$restart_time"
+   echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+   echo ""
+endif
+
 exit 0
 
 EndOfText

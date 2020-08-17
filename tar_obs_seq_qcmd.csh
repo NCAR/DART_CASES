@@ -7,7 +7,7 @@
 #  Usage: edit this file to change date
 #         > remote tar_obs_seq_qcmd.csh
 
-set year_mm  = 2019-01
+set year_mm  = 2019-10
 set case     = f.e21.FHIST_BGC.f09_025.CAM6assim.011
 set proj_dir = "/glade/p/nsc/ncis0006/Reanalyses/${case}/esp/hist/${year_mm}"
 set file     = "${case}.cam_obs_seq_final.${year_mm}.tgz"
@@ -19,7 +19,7 @@ set cmnd = "tar -c -z -f ${proj_dir}/${file} "'*obs_seq*'"${year_mm}"'*'
 cd /glade/scratch/raeder/${case}/archive/esp/hist
 
 echo "$cmnd" >& tar_obs_seq.${year_mm}.log.$$
-qcmd -A NCIS0006 -l walltime=6:00:00 -q share \
+qcmd -A P86850054 -l walltime=6:00:00 -q share \
      -l select=1:ncpus=1:mpiprocs=1 \
      -- "$cmnd"  >>& tar_obs_seq.${year_mm}.log.$$
 # 

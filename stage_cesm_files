@@ -11,7 +11,7 @@
 #  2) be sure 'restart_time' is set to the day and time from which you want to
 #     restart, if not the initial time.
 
-set restart_time = 2018-02-05-64800
+set restart_time = 2019-09-30-00000
 
 # ---------------------------------------------------------
 # Get the settings for this case from the CESM environment
@@ -158,5 +158,15 @@ else     # CONTINUE_RUN == FALSE
    echo "All files set to run the FIRST experiment step using (ref)time" 2011-01-01-00000
 
 endif
+
+ls *inf*${restart_time}* >& /dev/null
+if ($status != 0) then 
+   echo ""
+   echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+   echo "WARNING:  no inflation files were fond for $restart_time"
+   echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+   echo ""
+endif
+
 exit 0
 

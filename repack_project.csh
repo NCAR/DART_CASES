@@ -18,6 +18,8 @@
 # FIXME KEVIN - describe how this is supposed to be run/used.
 # >>> Run repack_st_arch.csh before running this script. <<<
 # >>> Log in to globus (see mv_to_campaign.csh for instructions).
+# >>> Purge extraneous files from $data_project_space/$data_CASE/esp/hist, 
+#     since (the new parts of) that whole directory will be archived.
 # >>> From a casper window (but not 'ssh'ed to data-access.ucar.edu)
 #     submit this script from the CESM CASEROOT directory. <<<
 
@@ -41,8 +43,8 @@
 #SBATCH --job-name=repack_project
 # Output standard output and error to a file named with 
 # the job-name and the jobid.
-#SBATCH -o %x_%j_2018.eo 
-#SBATCH -e %x_%j_2018.eo 
+#SBATCH -o %x_%j_2019.eo 
+#SBATCH -e %x_%j_2019.eo 
 # 80 members (1 type at a time)
 #SBATCH --ntasks=80 
 #SBATCH --time=04:00:00
