@@ -88,6 +88,15 @@ else if ($?PBS_NODEFILE) then
    echo "tasks_per_node : $NUMTASKS_PERNODE"
    echo " "
 
+   # KDR; debugging differences between 2019-09-30-21600 
+   # before and after cheyenne July down time.
+   # Mick says the old MPT, which was used to build and run the old filter,
+   # was mpt/2.21.
+   module swap mpt/2.21
+   echo "Modules used for this assimilation:"
+   module list
+   echo "-----------------------------------"
+
 else if ($?LSB_HOSTS) then
 
    # LSF environment variables:
@@ -141,6 +150,17 @@ setenv TOTALPES                  `./xmlquery TOTALPES      --value`
 setenv CONT_RUN                  `./xmlquery CONTINUE_RUN  --value`
 setenv CHECK_TIMING              `./xmlquery CHECK_TIMING  --value`
 setenv DATA_ASSIMILATION_CYCLES  `./xmlquery DATA_ASSIMILATION_CYCLES --value`
+
+echo "============================================================="
+echo "Brian's suggestions of checks:"
+echo "which mpiexec_mpt"
+which mpiexec_mpt
+echo "mpif90 -show"
+mpif90 -show
+echo "ldd ./filter.exe"
+ldd ${EXEROOT}/filter.exe
+echo "End of module checking section"
+echo "============================================================="
 
 # Switch CESM's timer script off for the rest of the forecasts of this job.
 # The timer takes a significant amount of time, which grows by ~15 s
@@ -637,6 +657,8 @@ if ($USING_PRIOR_INFLATION == true) then
    else
       # Look for the output from the previous assimilation (or fill_inflation_restart)
       # If inflation files exists, use them as input for this assimilation
+      # TODO: This should probably look for a date, instead of relying on the files
+      #       we want being the youngest in the directory.
       echo "Gathering inflation names at " `date --rfc-3339=ns`
       (${LIST} -rt1 *.dart.rh.${scomp}_output_priorinf_mean* | tail -n 1 >! latestfile) > & /dev/null
       (${LIST} -rt1 *.dart.rh.${scomp}_output_priorinf_sd*   | tail -n 1 >> latestfile) > & /dev/null

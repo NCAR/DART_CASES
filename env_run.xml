@@ -252,7 +252,7 @@
       timing tests.
     </desc>
     </entry>
-    <entry id="JOB_IDS" value="case.run:3565808.chadmin1.ib0.cheyenne.ucar.edu, case.st_archive:3565809.chadmin1.ib0.cheyenne.ucar.edu">
+    <entry id="JOB_IDS" value="case.run:3702021.chadmin1.ib0.cheyenne.ucar.edu, case.st_archive:3702022.chadmin1.ib0.cheyenne.ucar.edu">
       <type>char</type>
       <desc>List of job ids for most recent case.submit</desc>
     </entry>
@@ -265,7 +265,7 @@
     </entry>
   </group>
   <group id="run_data_archive">
-    <entry id="DOUT_S" value="TRUE">
+    <entry id="DOUT_S" value="FALSE">
       <type>logical</type>
       <valid_values>TRUE,FALSE</valid_values>
       <desc>Logical to turn on short term archiving.
@@ -1131,12 +1131,12 @@
         <value compclass="LND">FALSE</value>
       </values>
     </entry>
-    <entry id="DATA_ASSIMILATION_CYCLES" value="4">
+    <entry id="DATA_ASSIMILATION_CYCLES" value="1">
       <type>integer</type>
       <valid_values/>
       <desc> Number of model run - data assimilation steps to complete </desc>
     </entry>
-    <entry id="DATA_ASSIMILATION_SCRIPT" value="/glade/work/raeder/Exp/f.e21.FHIST_BGC.f09_025.CAM6assim.011/assimilate.csh">
+    <entry id="DATA_ASSIMILATION_SCRIPT" value="/glade/work/raeder/Exp/f.e21.FHIST_BGC.f09_025.CAM6assim.011/no_assimilate.csh">
       <type>char</type>
       <valid_values/>
       <desc>External script to be run after model completion</desc>
