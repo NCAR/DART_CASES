@@ -121,7 +121,7 @@ endif
 # it's convenient to make st_archive run automatically
 # at the end of successful jobs.
 # if ($start[3] == "01") ./xmlchange DOUT_S=FALSE
-if ($end[3] == "01") then
+if ($end[3] == "01" && $end[4] == "00000") then
    ./xmlchange DOUT_S=TRUE
 else
    ./xmlchange DOUT_S=FALSE
@@ -149,6 +149,7 @@ echo "$cycles cycles will be distributed among $resubmissions +1 jobs"
 
 @ job_minutes = ( $cycles_per_job * 7 ) + 10 
 # @ job_minutes = 12 * 60
+if ($job_minutes > 720) set job_minutes = 720
 @ wall_hours  = $job_minutes / 60
 @ wall_mins   = $job_minutes % 60
 set wall_time = `printf %02d:%02d $wall_hours $wall_mins`

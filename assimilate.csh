@@ -156,9 +156,9 @@ echo "Brian's suggestions of checks:"
 echo "which mpiexec_mpt"
 which mpiexec_mpt
 echo "mpif90 -show"
-mpif90 -show
-echo "ldd ./filter.exe"
-ldd ${EXEROOT}/filter.exe
+mpif90 -show | sed -e 's# -#\n     -#g'
+echo "ldd ./filter" 
+ldd ${EXEROOT}/filter 
 echo "End of module checking section"
 echo "============================================================="
 

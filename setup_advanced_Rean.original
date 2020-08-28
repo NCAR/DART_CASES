@@ -1169,12 +1169,12 @@ cd ${caseroot}
 setenv RUNDIR       \`./xmlquery RUNDIR       --value\`
 setenv CONTINUE_RUN \`./xmlquery CONTINUE_RUN --value\`
 
-ls \$RUNDIR/*.i.\${restart_time}.nc
+ls \$RUNDIR/*.r.\${restart_time}.nc
 if (\$status == 0) then
    # The restart set exists in the RUNDIR, regardless of the short term archiver.
    setenv DOUT_S FALSE
 else
-   set hide_loc = \`ls \$RUNDIR:h/Hide*/*_0001.i.\${restart_time}.nc\`
+   set hide_loc = \`ls \$RUNDIR:h/Hide*/*_0001.r.\${restart_time}.nc\`
    if (\$status == 0) then
       # The restart set exists in a Hide directory, regardless of the short term archiver.
       setenv DOUT_S FALSE

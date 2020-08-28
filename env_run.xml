@@ -252,7 +252,7 @@
       timing tests.
     </desc>
     </entry>
-    <entry id="JOB_IDS" value="case.run:3702021.chadmin1.ib0.cheyenne.ucar.edu, case.st_archive:3702022.chadmin1.ib0.cheyenne.ucar.edu">
+    <entry id="JOB_IDS" value="case.run:3849146.chadmin1.ib0.cheyenne.ucar.edu">
       <type>char</type>
       <desc>List of job ids for most recent case.submit</desc>
     </entry>
@@ -275,7 +275,7 @@
       <type>integer</type>
       <desc>system workload snapshot frequency (in seconds, if greater than 0; disabled otherwise)</desc>
     </entry>
-    <entry id="DOUT_S_SAVE_INTERIM_RESTART_FILES" value="FALSE">
+    <entry id="DOUT_S_SAVE_INTERIM_RESTART_FILES" value="TRUE">
       <type>logical</type>
       <valid_values>TRUE,FALSE</valid_values>
       <desc>Logical to archive all interim restart files, not just those at eor
@@ -1136,7 +1136,7 @@
       <valid_values/>
       <desc> Number of model run - data assimilation steps to complete </desc>
     </entry>
-    <entry id="DATA_ASSIMILATION_SCRIPT" value="/glade/work/raeder/Exp/f.e21.FHIST_BGC.f09_025.CAM6assim.011/no_assimilate.csh">
+    <entry id="DATA_ASSIMILATION_SCRIPT" value="/glade/work/raeder/Exp/f.e21.FHIST_BGC.f09_025.CAM6assim.011/assimilate.csh">
       <type>char</type>
       <valid_values/>
       <desc>External script to be run after model completion</desc>

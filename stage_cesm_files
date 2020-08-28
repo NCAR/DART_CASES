@@ -20,12 +20,12 @@ cd /glade/work/raeder/Exp/f.e21.FHIST_BGC.f09_025.CAM6assim.011
 setenv RUNDIR       `./xmlquery RUNDIR       --value`
 setenv CONTINUE_RUN `./xmlquery CONTINUE_RUN --value`
 
-ls $RUNDIR/*.i.${restart_time}.nc
+ls $RUNDIR/*.r.${restart_time}.nc
 if ($status == 0) then
    # The restart set exists in the RUNDIR, regardless of the short term archiver.
    setenv DOUT_S FALSE
 else
-   set hide_loc = `ls $RUNDIR:h/Hide*/*_0001.i.${restart_time}.nc`
+   set hide_loc = `ls $RUNDIR:h/Hide*/*_0001.r.${restart_time}.nc`
    if ($status == 0) then
       # The restart set exists in a Hide directory, regardless of the short term archiver.
       setenv DOUT_S FALSE
@@ -82,6 +82,8 @@ if ( ${CONTINUE_RUN} =~ TRUE ) then
       # The short term archiver is off, which leaves all the restart files
       # in the run directory.  The rpointer files must still be updated to
       # point to the files with the right day/time.
+
+      echo "DOUT_S = FALSE, so restart files should be in RUNDIR"
 
       @ inst=1
       while ($inst <= 80)
@@ -163,7 +165,7 @@ ls *inf*${restart_time}* >& /dev/null
 if ($status != 0) then 
    echo ""
    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-   echo "WARNING:  no inflation files were fond for $restart_time"
+   echo "WARNING:  no inflation files were found for $restart_time"
    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
    echo ""
 endif
