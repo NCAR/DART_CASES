@@ -47,10 +47,10 @@
 #SBATCH -o %x_%j.eo 
 #SBATCH -e %x_%j.eo 
 # 80 members
-# restarts (actually CLM hist) #SBATCH --ntasks=160 
-# forcing files: 
-#SBATCH --ntasks=405 
-# partial history set (8 members x 2 types) #SBATCH --ntasks=80
+# Restarts 
+#SBATCH --ntasks=81
+# CLM hist(restarts fits in this too) #SBATCH --ntasks=160 
+# forcing files: #SBATCH --ntasks=405 
 # 3 members; 
 # #SBATCH --ntasks=15 
 # #SBATCH --ntasks=1 
@@ -115,18 +115,18 @@ endif
 # do_forcing can only be turned off if archive/cpl/hist/cmds_template exists,
 #    or do_history is also turned off.
 # Number of tasks required by each section (set according to the max of the 'true's)
-# do_forcing     => nens * 5
+# do_forcing     => (nens +1) * 5
 # do_restarts    => nens + 1
 # do_obs_space   => 1
 # do_history     => nens * MAX(# history file types.  Currently 2 (CLM))
 # do_state_space => 1  (Could be upgraded to use #rest_dates(4-5) * #stats(4))
 
-set do_forcing     = 'true'
+set do_forcing     = 'false'
 # > > > WARNING; if restarts fails when $mm-01 is a Monday, turn off the pre_clean flag,
 #                in order to preserve what's in rest/YYYY-MM.
 set do_restarts    = 'true'
 set do_obs_space   = 'false'
-set do_history     = 'true'
+set do_history     = 'false'
 set do_state_space = 'true'
 
 # Check whether there is enough project disk space to run this.
