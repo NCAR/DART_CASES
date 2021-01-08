@@ -43,15 +43,17 @@
 #SBATCH --job-name=repack_project
 # Output standard output and error to a file named with 
 # the job-name and the jobid.
-#SBATCH -o %x_%j_2019.eo 
-#SBATCH -e %x_%j_2019.eo 
+#SBATCH -o %x_%j_2020-01-01.eo 
+# #SBATCH -e %x_%j_2019.eo 
 # 80 members (1 type at a time)
 #SBATCH --ntasks=80 
-#SBATCH --time=04:00:00
+#SBATCH --time=01:00:00
+# #SBATCH --time=04:00:00
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=raeder@ucar.edu
-#SBATCH --account=NCIS0006
+#SBATCH --account=P86850054
+# #SBATCH --account=NCIS0006
 #SBATCH --partition=dav
 #SBATCH --ignore-pbs
 # 
@@ -76,6 +78,9 @@ endif
 source ./data_scripts.csh
 echo "data_CASE     = $data_CASE"
 echo "data_NINST    = $data_NINST"
+# 2020-01-01
+set data_year = 2020-01-01
+#
 echo "data_year     = $data_year"
 echo "data_CASEROOT   = $data_CASEROOT"
 echo "data_proj_space = $data_proj_space"
@@ -86,10 +91,11 @@ echo "data_campaign   = ${data_campaign}"
 # "models" = component instance names (models, used in file names).
 # "cpl" needs to be first (as in repack_st_arch.csh) so that the cmdfile template
 # is created there and can be found by other components.
-set components     = (cpl lnd  atm ice  rof)
-set models         = (cpl clm2 cam cice mosart)
-# set components     = (rof)
-# set models         = (mosart)
+# 2020-01-01 changes
+# set components     = (cpl lnd  atm ice  rof)
+# set models         = (cpl clm2 cam cice mosart)
+set components     = (cpl)
+set models         = (cpl)
 
 # Default mode; archive 2 kinds of data.
 # These can be turned off by editing or argument(s).
@@ -100,7 +106,7 @@ set models         = (cpl clm2 cam cice mosart)
 # do_forcing is not needed because it can be handled the same as the 
 # {other components}/hist directories.
 
-set do_obs_space   = 'true'
+set do_obs_space   = 'false'
 set do_history     = 'true'
 
 #--------------------------------------------
@@ -154,10 +160,10 @@ if ($do_obs_space == true) then
    # from $DOUT_S_ROOT/esp/hist, since there will be tarred versions on $project
    # and CS.
    # Do that here?  Or manually?
-
-   cd ${data_proj_space}/${data_CASE}
    
 endif
+
+cd ${data_proj_space}/${data_CASE}
 
 #--------------------------------------------
 
@@ -180,95 +186,96 @@ if ($do_history == true) then
       echo "============================"
       echo "Location for history is `pwd`"
 
-      if ($components[$m] == 'cpl') then
-         set types = ( ha2x1d hr2x ha2x3h ha2x1h ha2x1hi )
-      else
-         ls 0001/*h0* >& /dev/null
-         if ($status != 0) then
-            echo "Skipping $components[$m]/hist"
-            @ m++
-            continue
-         endif
-
-         set types = ()
-         set n = 0
-         while ($n < 10)
-            ls 0001/*h${n}* 
-            if ($status != 0) then
-               @ n = $n - 1
-               break
-            endif
-
-            set types = ($types h$n)
-            @ n++
-         end
-      endif
-
-      set t = 1
-      while ($t <= $#types)
-         if ($models[$m] == 'cam' && $t == 1) then
-            # If cam.h0 ends up with more than PHIS, comment this out
-            # and fix the h0 purging in the state_space section.
-            # Actually; skip cam*.h0. because of the purging done by assimilate.csh.
-#             sed -e "s#TYPE#h$type#g" ${cmds_template} | grep _0001 >> ${mycmdfile}
-#             @ tasks = $tasks + 1
-            @ t++
-            continue
-         else
-            echo "   ----------------------"
-            echo "   Processing $models[$m] $types[$t]"
-         endif
-
-         # Make a cmd file to compress this year's history file(s) in $data_proj_space.
-         if (-f cmdfile) mv cmdfile cmdfile_prev
-         touch cmdfile
-
-         set tasks = 0
-         set i = 1
-         while ($i <= $data_NINST)
-            set inst = `printf %04d $i`
-            set yearly_file = ${data_CASE}.$models[$m]_${inst}.$types[$t].${data_year}.nc
-
-            if (-f ${inst}/${yearly_file}) then
-               echo "gzip ${inst}/${yearly_file} &> $types[$t]_${inst}.eo " >> cmdfile
-               @ tasks++
-            endif
-            @ i++
-         end
-
-         if (-z cmdfile) then
-            echo "WARNING: cmdfile has size 0, hopefully because type $types[$t] was already done"
-            @ t++
-            continue
-         endif
-
-         echo "   history mpirun launch_cf.sh of compression starts at "`date`
-         mpirun -n $tasks ${data_CASEROOT}/launch_cf.sh ./cmdfile
-         set mpi_status = $status
-         echo "   history mpirun launch_cf.sh ends at "`date`
-      
-         ls *.eo > /dev/null
-         if ($status == 0) then
-            grep gzip *.eo >& /dev/null
-            # grep failure = gzip success = "not 0"
-            set gr_stat = $status
-         else
-            echo "No eo files = failure of something besides g(un)zip."
-            echo "   History file gzip mpi_status = $mpi_status"
-            set gr_stat = 0
-         endif
-      
-         if ($mpi_status == 0 && $gr_stat != 0) then
-            rm cmdfile *.eo
-         else
-            echo "ERROR in repackaging history files: See $components[$m]/hist/"\
-                 'h*.eo, cmdfile'
-            echo '      grep gzip *.eo  yielded status '$gr_stat
-            exit 130
-         endif
-
-         @ t++
-      end
+# 2020; compression already done
+#       if ($components[$m] == 'cpl') then
+#          set types = ( ha2x1d hr2x ha2x3h ha2x1h ha2x1hi )
+#       else
+#          ls 0001/*h0* >& /dev/null
+#          if ($status != 0) then
+#             echo "Skipping $components[$m]/hist"
+#             @ m++
+#             continue
+#          endif
+# 
+#          set types = ()
+#          set n = 0
+#          while ($n < 10)
+#             ls 0001/*h${n}* 
+#             if ($status != 0) then
+#                @ n = $n - 1
+#                break
+#             endif
+# 
+#             set types = ($types h$n)
+#             @ n++
+#          end
+#       endif
+# 
+#       set t = 1
+#       while ($t <= $#types)
+#          if ($models[$m] == 'cam' && $t == 1) then
+#             # If cam.h0 ends up with more than PHIS, comment this out
+#             # and fix the h0 purging in the state_space section.
+#             # Actually; skip cam*.h0. because of the purging done by assimilate.csh.
+# #             sed -e "s#TYPE#h$type#g" ${cmds_template} | grep _0001 >> ${mycmdfile}
+# #             @ tasks = $tasks + 1
+#             @ t++
+#             continue
+#          else
+#             echo "   ----------------------"
+#             echo "   Processing $models[$m] $types[$t]"
+#          endif
+# 
+#          # Make a cmd file to compress this year's history file(s) in $data_proj_space.
+#          if (-f cmdfile) mv cmdfile cmdfile_prev
+#          touch cmdfile
+# 
+#          set tasks = 0
+#          set i = 1
+#          while ($i <= $data_NINST)
+#             set inst = `printf %04d $i`
+#             set yearly_file = ${data_CASE}.$models[$m]_${inst}.$types[$t].${data_year}.nc
+# 
+#             if (-f ${inst}/${yearly_file}) then
+#                echo "gzip ${inst}/${yearly_file} &> $types[$t]_${inst}.eo " >> cmdfile
+#                @ tasks++
+#             endif
+#             @ i++
+#          end
+# 
+#          if (-z cmdfile) then
+#             echo "WARNING: cmdfile has size 0, hopefully because type $types[$t] was already done"
+#             @ t++
+#             continue
+#          endif
+# 
+#          echo "   history mpirun launch_cf.sh of compression starts at "`date`
+#          mpirun -n $tasks ${data_CASEROOT}/launch_cf.sh ./cmdfile
+#          set mpi_status = $status
+#          echo "   history mpirun launch_cf.sh ends at "`date`
+#       
+#          ls *.eo > /dev/null
+#          if ($status == 0) then
+#             grep gzip *.eo >& /dev/null
+#             # grep failure = gzip success = "not 0"
+#             set gr_stat = $status
+#          else
+#             echo "No eo files = failure of something besides g(un)zip."
+#             echo "   History file gzip mpi_status = $mpi_status"
+#             set gr_stat = 0
+#          endif
+#       
+#          if ($mpi_status == 0 && $gr_stat != 0) then
+#             rm cmdfile *.eo
+#          else
+#             echo "ERROR in repackaging history files: See $components[$m]/hist/"\
+#                  'h*.eo, cmdfile'
+#             echo '      grep gzip *.eo  yielded status '$gr_stat
+#             exit 130
+#          endif
+# 
+#          @ t++
+#       end
 
       echo "   Calling mv_to_campaign.csh to copy compressed files"
       ${data_CASEROOT}/mv_to_campaign.csh \
