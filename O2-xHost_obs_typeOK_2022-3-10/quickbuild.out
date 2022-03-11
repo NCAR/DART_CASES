@@ -1,0 +1,271 @@
+Build date:
+Thu Mar 10 08:58:06 MST 2022
+
+Currently Loaded Modules:
+  1) ncarenv/1.3    3) ncarcompilers/0.5.0   5) netcdf/4.8.1   7) diffuse/0.4.8   9) nco/4.9.5
+  2) intel/19.1.1   4) mpt/2.22              6) xxdiff/4.0.1   8) matlab/R2020a  10) ncview/2.1.7
+
+ 
+
+PATH = 
+/glade/u/apps/ch/opt/ncview/2.1.7/gnu/8.3.0/bin
+/glade/u/apps/ch/opt/nco/4.9.5/gnu/9.1.0/bin
+/glade/u/apps/opt/matlab/R2020a/bin
+/glade/u/apps/ch/opt/diffuse/0.4.8/bin
+/glade/u/apps/ch/opt/xxdiff/4.0.1/gnu/8.3.0/bin
+/glade/u/apps/ch/opt/lmod/8.1.7/bin
+/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1/bin
+/glade/u/apps/ch/opt/ncarcompilers/0.5.0/intel/19.1.1/mpi
+/glade/u/apps/ch/opt/mpt/2.22/bin
+/glade/u/apps/ch/opt/ncarcompilers/0.5.0/intel/19.1.1
+/glade/u/apps/opt/intel/2020u1/vtune_amplifier/bin64
+/glade/u/apps/opt/intel/2020u1/inspector/bin64
+/glade/u/apps/opt/intel/2020u1/advisor/bin64
+/glade/u/apps/opt/intel/2020u1/compilers_and_libraries/linux/bin/intel64
+/glade/u/apps/opt/vncmgr
+/glade/u/apps/opt/globus-utils
+/glade/u/apps/ch/opt/usr/bin
+/usr/bin
+/bin
+/usr/sbin
+/sbin
+/usr/local/bin
+/usr/bin/X11
+/usr/games
+/opt/ibutils/bin
+/usr/lib/mit/bin
+/glade/u/apps/opt/hpss/hpss-client.5.0.2.p5/bin
+/glade/u/apps/ch/os/usr/bin
+/glade/u/apps/ch/opt/hpe-cpe/1.4.1/bin
+/glade/u/apps/ch/opt/hpe-cpe/21.09/bin
+/opt/pbs/bin
+/glade/u/home/raeder/Scripts
+/glade/u/home/raeder/Scripts
+ls: cannot access '*.cdl': No such file or directory
+
+---------------------------------------------------
+CAM FV build number 1 is preprocess
+....... Makefile is ready.
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/types_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/utilities_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/time_manager_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/preprocess/preprocess.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/null_mpi_utilities_mod.f90
+ifort types_mod.o utilities_mod.o time_manager_mod.o preprocess.o null_mpi_utilities_mod.o -o preprocess  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+ 
+ --------------------------------------
+ Starting ... at YYYY MM DD HH MM SS = 
+                 2022  3 10  8 58 10
+ Program preprocess
+ --------------------------------------
+ 
+  set_nml_output Echo NML values to log file only
+ Path names of default obs_def and obs_kind modules
+ ../../../observations/forward_operators/DEFAULT_obs_def_mod.F90
+ ../../../assimilation_code/modules/observations/DEFAULT_obs_kind_mod.F90
+ Path names of output obs_def and obs_kind modules
+ ../../../observations/forward_operators/obs_def_mod.f90
+ ../../../assimilation_code/modules/observations/obs_kind_mod.f90
+ INPUT obs_def files follow:
+ ../../../observations/forward_operators/obs_def_reanalysis_bufr_mod.f90
+ ../../../observations/forward_operators/obs_def_altimeter_mod.f90
+ ../../../observations/forward_operators/obs_def_gps_mod.f90
+ ../../../observations/forward_operators/obs_def_AIRS_mod.f90
+ INPUT model files follow:
+  preprocess Finished successfully.
+ 
+ --------------------------------------
+ Finished ... at YYYY MM DD HH MM SS = 
+                 2022  3 10  8 58 10
+ Program preprocess
+ --------------------------------------
+ 
+
+---------------------------------------------------
+CAM FV build number 2 is advance_time
+........ Makefile is ready.
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/parse_args_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/advance_time/advance_time.f90
+ifort parse_args_mod.o time_manager_mod.o utilities_mod.o types_mod.o advance_time.o null_mpi_utilities_mod.o -o advance_time  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV build number 3 is column_rand
+........ Makefile is ready.
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/random_seq_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../models/cam-fv/column_rand.f90
+ifort column_rand.o time_manager_mod.o utilities_mod.o types_mod.o null_mpi_utilities_mod.o random_seq_mod.o -o column_rand  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV build number 4 is create_fixed_network_seq
+................................ Makefile is ready.
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/observations/obs_kind_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/netcdf_utilities_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/sort_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/io/state_structure_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/ensemble_manager_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/io/io_filenames_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/adaptive_inflate_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/options_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/location/threed_sphere/location_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/null_win_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/distributed_state_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../models/cam-fv/chem_tables_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../models/utilities/quad_utils_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/io/dart_time_io_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../models/utilities/default_model_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../models/cam-fv/model_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/assim_model_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/io/direct_netcdf_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/io/state_vector_io_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../observations/forward_operators/obs_def_utilities_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../observations/forward_operators/obs_def_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/observations/obs_sequence_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/create_fixed_network_seq/create_fixed_network_seq.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/location/utilities/default_location_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/location/utilities/location_io_mod.f90
+ifort time_manager_mod.o io_filenames_mod.o state_vector_io_mod.o ensemble_manager_mod.o null_mpi_utilities_mod.o chem_tables_mod.o state_structure_mod.o create_fixed_network_seq.o model_mod.o obs_sequence_mod.o netcdf_utilities_mod.o assim_model_mod.o distributed_state_mod.o sort_mod.o location_mod.o obs_def_utilities_mod.o types_mod.o quad_utils_mod.o random_seq_mod.o direct_netcdf_mod.o default_model_mod.o dart_time_io_mod.o obs_kind_mod.o null_win_mod.o default_location_mod.o obs_def_mod.o adaptive_inflate_mod.o utilities_mod.o location_io_mod.o options_mod.o -o create_fixed_network_seq  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV build number 5 is create_obs_sequence
+................................. Makefile is ready.
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/cov_cutoff_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/create_obs_sequence/create_obs_sequence.f90
+ifort null_mpi_utilities_mod.o adaptive_inflate_mod.o chem_tables_mod.o default_model_mod.o assim_model_mod.o state_vector_io_mod.o model_mod.o obs_def_mod.o dart_time_io_mod.o location_io_mod.o null_win_mod.o quad_utils_mod.o default_location_mod.o time_manager_mod.o random_seq_mod.o obs_kind_mod.o ensemble_manager_mod.o direct_netcdf_mod.o obs_sequence_mod.o obs_def_utilities_mod.o io_filenames_mod.o options_mod.o state_structure_mod.o distributed_state_mod.o utilities_mod.o cov_cutoff_mod.o types_mod.o sort_mod.o netcdf_utilities_mod.o location_mod.o create_obs_sequence.o -o create_obs_sequence  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV build number 6 is fill_inflation_restart
+....................................... Makefile is ready.
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/quality_control_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/reg_factor_mod.f90
+../../../assimilation_code/modules/assimilation/reg_factor_mod.f90(143): remark #8291: Recommended relationship between field width 'W' and the number of fractional digits 'D' in this edit descriptor is 'W>=D+7'.
+         22 format(4(i7, 1x), e10.4)
+-------------------------------^
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/obs_impact_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/sampling_error_correction_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/assim_tools_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/fill_inflation_restart/fill_inflation_restart.f90
+ifort quality_control_mod.o location_io_mod.o distributed_state_mod.o null_mpi_utilities_mod.o obs_kind_mod.o obs_def_utilities_mod.o model_mod.o reg_factor_mod.o state_structure_mod.o chem_tables_mod.o obs_sequence_mod.o random_seq_mod.o dart_time_io_mod.o assim_tools_mod.o netcdf_utilities_mod.o time_manager_mod.o ensemble_manager_mod.o cov_cutoff_mod.o location_mod.o assim_model_mod.o sampling_error_correction_mod.o obs_def_mod.o sort_mod.o utilities_mod.o direct_netcdf_mod.o options_mod.o default_model_mod.o quad_utils_mod.o default_location_mod.o parse_args_mod.o fill_inflation_restart.o types_mod.o obs_impact_mod.o null_win_mod.o io_filenames_mod.o state_vector_io_mod.o adaptive_inflate_mod.o -o fill_inflation_restart  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV build number 7 is obs_common_subset
+................................. Makefile is ready.
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/obs_common_subset/obs_common_subset.f90
+ifort ensemble_manager_mod.o null_mpi_utilities_mod.o chem_tables_mod.o assim_model_mod.o netcdf_utilities_mod.o types_mod.o state_vector_io_mod.o obs_def_mod.o dart_time_io_mod.o location_mod.o obs_kind_mod.o default_model_mod.o distributed_state_mod.o state_structure_mod.o options_mod.o cov_cutoff_mod.o default_location_mod.o model_mod.o location_io_mod.o obs_sequence_mod.o sort_mod.o null_win_mod.o utilities_mod.o random_seq_mod.o quad_utils_mod.o direct_netcdf_mod.o obs_def_utilities_mod.o adaptive_inflate_mod.o obs_common_subset.o time_manager_mod.o io_filenames_mod.o -o obs_common_subset  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV build number 8 is obs_diag
+................................ Makefile is ready.
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/obs_diag/threed_sphere/obs_diag.f90
+ifort location_mod.o quad_utils_mod.o direct_netcdf_mod.o obs_def_mod.o options_mod.o adaptive_inflate_mod.o default_location_mod.o dart_time_io_mod.o random_seq_mod.o netcdf_utilities_mod.o types_mod.o utilities_mod.o sort_mod.o state_vector_io_mod.o obs_kind_mod.o obs_def_utilities_mod.o obs_sequence_mod.o default_model_mod.o model_mod.o null_win_mod.o state_structure_mod.o io_filenames_mod.o location_io_mod.o distributed_state_mod.o chem_tables_mod.o ensemble_manager_mod.o null_mpi_utilities_mod.o assim_model_mod.o obs_diag.o time_manager_mod.o -o obs_diag  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV build number 9 is obs_impact_tool
+.......... Makefile is ready.
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/obs_impact_tool/obs_impact_tool.f90
+ifort obs_impact_mod.o utilities_mod.o time_manager_mod.o parse_args_mod.o null_mpi_utilities_mod.o obs_kind_mod.o types_mod.o obs_impact_tool.o -o obs_impact_tool  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV build number 10 is obs_seq_to_netcdf
+................................. Makefile is ready.
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/schedule_mod.f90
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/obs_seq_to_netcdf/obs_seq_to_netcdf.f90
+ifort state_vector_io_mod.o default_location_mod.o chem_tables_mod.o obs_def_utilities_mod.o utilities_mod.o options_mod.o time_manager_mod.o assim_model_mod.o state_structure_mod.o ensemble_manager_mod.o random_seq_mod.o null_mpi_utilities_mod.o adaptive_inflate_mod.o obs_def_mod.o model_mod.o obs_kind_mod.o location_io_mod.o sort_mod.o quad_utils_mod.o direct_netcdf_mod.o null_win_mod.o types_mod.o schedule_mod.o dart_time_io_mod.o distributed_state_mod.o netcdf_utilities_mod.o io_filenames_mod.o obs_seq_to_netcdf.o default_model_mod.o location_mod.o obs_sequence_mod.o -o obs_seq_to_netcdf  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV build number 11 is obs_sequence_tool
+................................. Makefile is ready.
+ifort -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/obs_sequence_tool/obs_sequence_tool.f90
+ifort ensemble_manager_mod.o cov_cutoff_mod.o dart_time_io_mod.o chem_tables_mod.o random_seq_mod.o obs_kind_mod.o state_structure_mod.o io_filenames_mod.o time_manager_mod.o obs_def_utilities_mod.o quad_utils_mod.o model_mod.o obs_sequence_mod.o netcdf_utilities_mod.o location_io_mod.o adaptive_inflate_mod.o sort_mod.o location_mod.o distributed_state_mod.o obs_def_mod.o options_mod.o default_location_mod.o state_vector_io_mod.o default_model_mod.o null_mpi_utilities_mod.o types_mod.o obs_sequence_tool.o utilities_mod.o null_win_mod.o assim_model_mod.o direct_netcdf_mod.o -o obs_sequence_tool  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+Success: All single task DART programs compiled.
+Script now compiling MPI parallel versions of the DART programs.
+
+---------------------------------------------------
+CAM FV with MPI build number 12 is filter
+Making Makefile with MPI
+...........................................Using MPI wrappers
+ Makefile is ready.
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/types_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/utilities_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/sort_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/time_manager_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/mpi_utilities_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/ensemble_manager_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/options_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/random_seq_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/observations/obs_kind_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/location/threed_sphere/location_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/no_cray_win_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/distributed_state_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/netcdf_utilities_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/io/state_structure_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../models/cam-fv/chem_tables_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../models/utilities/quad_utils_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/io/dart_time_io_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../models/utilities/default_model_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../models/cam-fv/model_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/assim_model_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../observations/forward_operators/obs_def_utilities_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../observations/forward_operators/obs_def_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/observations/obs_sequence_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/cov_cutoff_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/reg_factor_mod.f90
+../../../assimilation_code/modules/assimilation/reg_factor_mod.f90(143): remark #8291: Recommended relationship between field width 'W' and the number of fractional digits 'D' in this edit descriptor is 'W>=D+7'.
+         22 format(4(i7, 1x), e10.4)
+-------------------------------^
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/parse_args_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/utilities/obs_impact_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/sampling_error_correction_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/adaptive_inflate_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/quality_control_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/assim_tools_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/io/io_filenames_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/smoother_mod.f90
+../../../assimilation_code/modules/assimilation/smoother_mod.f90(480): warning #6843: A dummy argument with an explicit INTENT(OUT) declaration is not given an explicit value.   [TEMP_ENS]
+   temp_ens, ENS_MEAN_COPY, ENS_SD_COPY, POST_INF_COPY, POST_INF_SD_COPY)
+---^
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/io/direct_netcdf_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/io/state_vector_io_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/obs_model_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/observations/forward_operator_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/modules/assimilation/filter_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/filter/filter.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/location/utilities/location_io_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/location/utilities/default_location_mod.f90
+mpif90 types_mod.o sort_mod.o smoother_mod.o time_manager_mod.o assim_tools_mod.o io_filenames_mod.o cov_cutoff_mod.o adaptive_inflate_mod.o obs_def_utilities_mod.o quality_control_mod.o filter_mod.o obs_sequence_mod.o sampling_error_correction_mod.o reg_factor_mod.o model_mod.o chem_tables_mod.o filter.o obs_kind_mod.o no_cray_win_mod.o default_model_mod.o location_mod.o location_io_mod.o forward_operator_mod.o obs_model_mod.o options_mod.o obs_impact_mod.o default_location_mod.o state_structure_mod.o direct_netcdf_mod.o ensemble_manager_mod.o dart_time_io_mod.o obs_def_mod.o assim_model_mod.o netcdf_utilities_mod.o mpi_utilities_mod.o random_seq_mod.o parse_args_mod.o state_vector_io_mod.o quad_utils_mod.o utilities_mod.o distributed_state_mod.o -o filter  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV with MPI build number 13 is perfect_model_obs
+Making Makefile with MPI
+...........................................Using MPI wrappers
+ Makefile is ready.
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/perfect_model_obs/perfect_model_obs.f90
+mpif90 assim_model_mod.o state_structure_mod.o dart_time_io_mod.o ensemble_manager_mod.o obs_model_mod.o options_mod.o filter_mod.o netcdf_utilities_mod.o model_mod.o state_vector_io_mod.o reg_factor_mod.o utilities_mod.o location_io_mod.o default_location_mod.o location_mod.o quality_control_mod.o obs_sequence_mod.o parse_args_mod.o obs_kind_mod.o no_cray_win_mod.o distributed_state_mod.o direct_netcdf_mod.o sort_mod.o io_filenames_mod.o sampling_error_correction_mod.o obs_def_mod.o adaptive_inflate_mod.o mpi_utilities_mod.o cov_cutoff_mod.o quad_utils_mod.o assim_tools_mod.o time_manager_mod.o default_model_mod.o types_mod.o obs_impact_mod.o random_seq_mod.o smoother_mod.o forward_operator_mod.o chem_tables_mod.o obs_def_utilities_mod.o perfect_model_obs.o -o perfect_model_obs  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV with MPI build number 14 is model_mod_check
+Making Makefile with MPI
+.............................................Using MPI wrappers
+ Makefile is ready.
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../models/model_mod_tools/model_check_utilities_mod.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../models/model_mod_tools/test_interpolate_threed_sphere.f90
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/model_mod_check/model_mod_check.f90
+mpif90 default_model_mod.o filter_mod.o types_mod.o sampling_error_correction_mod.o obs_model_mod.o reg_factor_mod.o mpi_utilities_mod.o quality_control_mod.o io_filenames_mod.o adaptive_inflate_mod.o obs_kind_mod.o test_interpolate_threed_sphere.o model_check_utilities_mod.o assim_model_mod.o location_io_mod.o distributed_state_mod.o location_mod.o no_cray_win_mod.o chem_tables_mod.o dart_time_io_mod.o direct_netcdf_mod.o obs_def_mod.o default_location_mod.o obs_sequence_mod.o cov_cutoff_mod.o model_mod_check.o parse_args_mod.o random_seq_mod.o forward_operator_mod.o quad_utils_mod.o options_mod.o utilities_mod.o smoother_mod.o ensemble_manager_mod.o state_vector_io_mod.o netcdf_utilities_mod.o obs_def_utilities_mod.o time_manager_mod.o obs_impact_mod.o state_structure_mod.o model_mod.o sort_mod.o assim_tools_mod.o -o model_mod_check  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV with MPI build number 15 is perturb_single_instance
+Making Makefile with MPI
+.......................................Using MPI wrappers
+ Makefile is ready.
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/perturb_single_instance/perturb_single_instance.f90
+mpif90 model_mod.o state_vector_io_mod.o adaptive_inflate_mod.o ensemble_manager_mod.o utilities_mod.o obs_def_mod.o assim_model_mod.o quad_utils_mod.o no_cray_win_mod.o dart_time_io_mod.o sampling_error_correction_mod.o perturb_single_instance.o cov_cutoff_mod.o distributed_state_mod.o default_location_mod.o state_structure_mod.o default_model_mod.o location_mod.o obs_def_utilities_mod.o location_io_mod.o obs_kind_mod.o obs_impact_mod.o time_manager_mod.o assim_tools_mod.o mpi_utilities_mod.o sort_mod.o random_seq_mod.o parse_args_mod.o chem_tables_mod.o obs_sequence_mod.o netcdf_utilities_mod.o reg_factor_mod.o direct_netcdf_mod.o quality_control_mod.o io_filenames_mod.o types_mod.o options_mod.o -o perturb_single_instance  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+
+---------------------------------------------------
+CAM FV with MPI build number 16 is closest_member_tool
+Making Makefile with MPI
+.......................................Using MPI wrappers
+ Makefile is ready.
+mpif90 -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include  -c	../../../assimilation_code/programs/closest_member_tool/closest_member_tool.f90
+mpif90 netcdf_utilities_mod.o mpi_utilities_mod.o direct_netcdf_mod.o dart_time_io_mod.o obs_def_mod.o obs_kind_mod.o utilities_mod.o chem_tables_mod.o default_model_mod.o reg_factor_mod.o location_io_mod.o quad_utils_mod.o io_filenames_mod.o default_location_mod.o obs_def_utilities_mod.o state_structure_mod.o assim_model_mod.o time_manager_mod.o obs_impact_mod.o quality_control_mod.o obs_sequence_mod.o model_mod.o sampling_error_correction_mod.o ensemble_manager_mod.o assim_tools_mod.o cov_cutoff_mod.o distributed_state_mod.o location_mod.o sort_mod.o types_mod.o options_mod.o random_seq_mod.o adaptive_inflate_mod.o closest_member_tool.o parse_args_mod.o no_cray_win_mod.o state_vector_io_mod.o -o closest_member_tool  -O2 -xHost -ipo -assume buffered_io -I/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//include -L/glade/u/apps/ch/opt/netcdf/4.8.1/intel/19.1.1//lib -lnetcdff -lnetcdf
+md5sum filter:
+865b51ad8ce9ba5e2498099d6a0cd517  filter
+Success: All MPI parallel DART programs compiled.

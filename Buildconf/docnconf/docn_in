@@ -17,7 +17,7 @@
   mapread = "NOT_SET"
   mapwrite = "NOT_SET"
   readmode = "single"
-  streams = "docn.streams.txt.prescribed_0080 2011 2011 2020"
+  streams = "docn.streams.txt.prescribed_0080 2019 2019 2021"
   taxmode = "limit"
   tintalgo = "linear"
   vectors = "null"

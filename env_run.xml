@@ -252,7 +252,7 @@
       timing tests.
     </desc>
     </entry>
-    <entry id="JOB_IDS" value="case.run:4008583.chadmin1.ib0.cheyenne.ucar.edu, case.st_archive:4008585.chadmin1.ib0.cheyenne.ucar.edu">
+    <entry id="JOB_IDS" value="case.run:3248159.chadmin1.ib0.cheyenne.ucar.edu, case.st_archive:3248160.chadmin1.ib0.cheyenne.ucar.edu">
       <type>char</type>
       <desc>List of job ids for most recent case.submit</desc>
     </entry>
@@ -1131,7 +1131,7 @@
         <value compclass="LND">FALSE</value>
       </values>
     </entry>
-    <entry id="DATA_ASSIMILATION_CYCLES" value="8">
+    <entry id="DATA_ASSIMILATION_CYCLES" value="64">
       <type>integer</type>
       <valid_values/>
       <desc> Number of model run - data assimilation steps to complete </desc>
@@ -1338,6 +1338,7 @@
     the same data files that provide SST data to the data ocean model. They are
     normally found in the same file because the SST and ice fraction data are derived
     from the same observational data sets and are consistent with each other.
+        "/glade/work/raeder/Models/CAM_init/SST/avhrr-only-v2.2011-202001_0Z_filled_c200810.nc"
     --- Settings of som (slab ocean model) or  som_aquap (aquaplanet slab ocean) are
     prognostic modes which compute a prognostic sea surface temperature and a
     freeze/melt potential (surface Q-flux) used by the sea ice model.  This
@@ -1378,7 +1379,7 @@
     Sets SST and ice coverage stream name.
     This is only used when DOCN_MODE=prescribed.</desc>
     </entry>
-    <entry id="SSTICE_DATA_FILENAME" value="/glade/work/raeder/Models/CAM_init/SST/avhrr-only-v2.2011-202001_0Z_filled_c200810.nc">
+    <entry id="SSTICE_DATA_FILENAME" value="/glade/work/raeder/Models/CAM_init/SST/avhrr_v2.1-only-v2.201912-202109_12Z_filled_c211112.nc">
       <type>char</type>
       <valid_values/>
       <desc>Prescribed SST and ice coverage data file name.
@@ -1394,7 +1395,7 @@
     Sets SST and ice coverage grid file name for prescribed runs.
     This is only used when DOCN_MODE=prescribed.</desc>
     </entry>
-    <entry id="SSTICE_YEAR_ALIGN" value="2011">
+    <entry id="SSTICE_YEAR_ALIGN" value="2019">
       <type>integer</type>
       <valid_values/>
       <desc>The model year that corresponds to SSTICE_YEAR_START on the data file.
@@ -1409,7 +1410,7 @@
     "taxmode" stream option; see the data model documentation for more details.
     This is only used when DOCN_MODE=prescribed.</desc>
     </entry>
-    <entry id="SSTICE_YEAR_START" value="2011">
+    <entry id="SSTICE_YEAR_START" value="2019">
       <type>integer</type>
       <valid_values/>
       <desc>The first year of data to use from SSTICE_DATA_FILENAME.
@@ -1418,7 +1419,7 @@
     years 0-9 in the file will not be used.
     This is only used when DOCN_MODE=prescribed.</desc>
     </entry>
-    <entry id="SSTICE_YEAR_END" value="2020">
+    <entry id="SSTICE_YEAR_END" value="2021">
       <type>integer</type>
       <valid_values/>
       <desc>The last year of data to use from SSTICE_DATA_FILENAME.

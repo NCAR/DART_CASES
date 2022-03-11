@@ -362,7 +362,7 @@
   f_yieldstress22 = "xxxxx"
 /
 &ice_prescribed_nml
-  model_year_align = 2011
+  model_year_align = 2019
   prescribed_ice = .true.
   prescribed_ice_fill = .false.
   stream_domareaname = "area"
@@ -371,9 +371,9 @@
   stream_domtvarname = "time"
   stream_domxvarname = "xc"
   stream_domyvarname = "yc"
-  stream_fldfilename = "/glade/work/raeder/Models/CAM_init/SST/avhrr-only-v2.2011-202001_0Z_filled_c200810.nc"
+  stream_fldfilename = "/glade/work/raeder/Models/CAM_init/SST/avhrr_v2.1-only-v2.201912-202109_12Z_filled_c211112.nc"
   stream_fldvarname = "ice_cov"
   stream_mapread = "NOT_SET"
-  stream_year_first = 2011
-  stream_year_last = 2020
+  stream_year_first = 2019
+  stream_year_last = 2021
 /
