@@ -24,10 +24,9 @@
 #     submit this script from the CESM CASEROOT directory. <<<
 
 # > > > WARNING; cheyenne compute nodes do not have access to Campaign Storage. < < < 
-#       Run this on casper using slurm.
+#       Run this on casper.
 
-#-----------------------------------------
-# Submitting the job to casper (or other NCAR DAV clusters?) requires using slurm.
+#==========================================================================
 
 # Important things to know about slurm:
 #
@@ -37,8 +36,6 @@
 # scancel   killing a job
 # scontrol  show job <jobID> specifications 
 #           (-d for more details, including the script)
-
-#==========================================================================
 
 #SBATCH --job-name=repack_project
 # Output standard output and error to a file named with 
@@ -56,16 +53,35 @@
 #SBATCH --ignore-pbs
 # 
 #-----------------------------------------
+#PBS  -N repack_project.csh
+#PBS  -A P86850054
+#PBS  -q casper
+#PBS  -l select=3:ncpus=36:mpiprocs=36
+#PBS  -l walltime=04:00:00
+# Make output consistent with SLURM (2011-2019 files)
+#PBS  -o repack_project_2020+COSMIC2lnd.eo
+#PBS  -j oe 
+#PBS  -k eod
+#-----------------------------------------
 
-cd $SLURM_SUBMIT_DIR
+if ($?SLURM_SUBMIT_DIR) then
+   cd $SLURM_SUBMIT_DIR
+   env | sort | grep SLURM
+else if ($?PBS_O_WORKDIR) then
+   cd $PBS_O_WORKDIR
+   env | sort | grep PBS
+endif
+
 # Needed for globus+ncar_py (but only in mv_to_campaign.csh?)
 module load nco gnu 
 
-# Needed for mpiexec_mpt:  
-setenv MPI_SHEPHERD true
-setenv date 'date --rfc-3339=ns'
+# Must run on casper, which only has mpirun
+# # Needed for mpiexec_mpt:  
+# setenv MPI_SHEPHERD true
 
-echo "Preamble at "`date`
+setenv date_rfc 'date --rfc-3339=ns'
+
+echo "Preamble at "`$date_rfc`
 
 if (! -f CaseStatus) then
    echo "ERROR: this script must be run from the CESM CASEROOT directory"
@@ -110,15 +126,16 @@ if ($#argv != 0) then
    echo "Before running this script"
    echo "    Run repack_st_archive.csh. "
    echo "    Log in to globus (see mv_to_campaign.csh for instructions)."
+   echo "Batch job"
    echo "    From a casper window (but not 'ssh'ed to data-access.ucar.edu)"
    echo "    submit this script from the CESM CASEROOT directory. "
-   echo "Call by user or script:"
-   echo "   repack_project.csh project_dir campaign_dir [do_this=false] ... "
-   echo "      project_dir    = directory where $data_CASE.dart.e.cam_obs_seq_final.$date.nc are"
-   echo "      campaign_dir   = directory where $data_CASE.dart.e.cam_obs_seq_final.$date.nc are"
-   echo "      do_this=false  = Turn off one (or more) of the archiving sections."
-   echo "                       'this' = {obs_space,hist}."
-   echo "                       No quotes, no spaces."
+#    echo "Call by user or script:"
+#    echo "   repack_project.csh project_dir campaign_dir [do_this=false] ... "
+#    echo "      project_dir    = directory where the yearly files are accumulated by repack_st_arch.csh"
+#    echo "      campaign_dir   = directory where compressed yearly files and obs space files will be copied"
+#    echo "      do_this=false  = Turn off one (or more) of the archiving sections."
+#    echo "                       'this' = {obs_space,hist}."
+#    echo "                       No quotes, no spaces."
    exit
 endif
 
@@ -126,13 +143,11 @@ endif
 # CASE could be replaced by setup_*, as is done for DART_config.
 # "data_proj_space" will be created as needed (assuming user has permission to write there).
 
-env | sort | grep SLURM
-
 #==========================================================================
 # Where to find files, and what to do with them
 #==========================================================================
 # 1) Obs space diagnostics.
-#    Generated separately using diags_rean.csh
+#    Generated separately using diags_rean.csh and matlab scripts
 
 echo "------------------------"
 if ($do_obs_space == true) then
@@ -165,7 +180,7 @@ cd ${data_proj_space}/${data_CASE}
 
 echo "------------------------"
 if ($do_history == true) then
-   echo "There are $#components components (models)"
+   echo "$#components components (models) were requested"
    echo " "
    set m = 1
    while ($m <= $#components)
@@ -243,10 +258,10 @@ if ($do_history == true) then
             continue
          endif
 
-         echo "   history mpirun launch_cf.sh of compression starts at "`date`
+         echo "   history mpirun launch_cf.sh of compression starts at "`$date_rfc`
          mpirun -n $tasks ${data_CASEROOT}/launch_cf.sh ./cmdfile
          set mpi_status = $status
-         echo "   history mpirun launch_cf.sh ends at "`date`
+         echo "   history mpirun launch_cf.sh ends at "`$date_rfc`
       
          ls *.eo > /dev/null
          if ($status == 0) then

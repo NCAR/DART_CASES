@@ -233,7 +233,7 @@ echo '   Edit push_prep.csh to make it a csh script '
 echo '   % csh push_prep.csh'
 echo '   % git commit '
 echo "     with comments about the important modifications."
-echo '   % git push upstream '$data_CASE
+echo '   % git push upstream ' $data_CASE
 echo "   On github...NCAR/DART_CASES issue the pull request."
 # Echo the submit command, without generating new ${comp}_in_#### files.
 echo "After approval, submit the job using"

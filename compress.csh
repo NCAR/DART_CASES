@@ -15,15 +15,16 @@
 #
 # Method:
 #
-# When called from a script (normally assimilate.csh), it compresses the files.
-# When submitted as a batch job, it can also uncompress sets of files -  
-# IF this script has been configured to use the right metadata to
-# construct the expected data directories.
+# When called from assimilate.csh, it compresses the files.
+# When called from repack_st_arch.csh it does both.
 #
 # The strategy is to create a cmdfile that contains a separate task on each line
 # and dispatch that cmdfile to perform N simultaneous operations. That cmdfile
 # has a syntax ( &> ) to put stderr and stdout in a single file.
-# PBS requires 'setenv MPI_SHEPHERD true' for the cmdfile to work correctly.
+# PBS required 'setenv MPI_SHEPHERD true' before 2022 for the cmdfile to work correctly.
+# Casper now (2022) limits the number of CPUs a job can request to 144,
+# so this script and the calling scripts need to process smaller components of files,
+# typically 1 DART ensemble at a time.
 #
 # Compression method can depend on the file type, and in the future may include 
 # lossy compression. This script is most often called by assimilate.csh, but can 
@@ -33,7 +34,7 @@
 # 1) Every cycle: 
 #    +  all the cpl history (forcing) files.
 #    +  DART output
-#       >  stages of state files  
+#       >  types of state files  
 #             mean, sd  (no instance number)
 #       >  obs_seq.final (no instance number)
 #       >  Note: inflation files are never compressed.
@@ -43,10 +44,10 @@
 if ($#argv != 4) then
    echo "Usage: In the directory containing the files to be processed:"
    echo "   call with exactly 4 arguments:"
-   echo '   ${scr_dir}/compress.csh command YYYY-MM-DD-SSSS "sets" "stages"'
+   echo '   ${scr_dir}/compress.csh command YYYY-MM-DD-SSSS "components" "types"'
    echo '   where '
-   echo '   sets   = 1 or more of {clm2 cpl cam cice hist dart} to compress, separated by spaces'
-   echo '   stages = 1 or more of stages {input, preassim, postassim, output} to compress.'
+   echo '   components   = 1 or more of {clm2 cpl cam cice hist dart} to compress, separated by spaces'
+   echo '   types = 1 or more of types {input, forecast, preassim, postassim, analysis, output} to compress.'
    echo ' -OR-'
    echo "   edit submit_compress.csh ; qsub submit_compress.csh"
    exit 17
@@ -56,8 +57,8 @@ endif
 
 set comp_cmd      = $1
 set ymds          = $2
-set sets          = ($3)
-set stages        = ($4)
+set components    = ($3)
+set types         = ($4)
 
 set cmd = `echo $comp_cmd | cut -d' ' -f1`
 if ($cmd == 'gzip') then
@@ -72,8 +73,8 @@ endif
 echo "In compress.csh:"
 echo "   (arg1) comp_cmd   = $comp_cmd"
 echo "   (arg2) date       = $ymds"
-echo "   (arg3) sets       = $sets"
-echo "   (arg4) stages     = $stages"
+echo "   (arg3) components       = $components"
+echo "   (arg4) types     = $types"
 echo "   data_CASE     = $data_CASE"
 echo "   data_CASEROOT = $data_CASEROOT"
 echo "   ensemble_size = $data_NINST"
@@ -105,7 +106,7 @@ touch mycmdfile
 # 'task' is a running counter of jobs in mycmdfile.
 set task = 0
 
-foreach comp ( $sets )
+foreach comp ( $components )
 echo "comp = $comp"
 switch ($comp)
    # FIXME ... the coupler files may or may not have an instance number in them.
@@ -140,7 +141,7 @@ switch ($comp)
       # Coupler history (forcing) files, ordered by decreasing size 
       # ha is not a necessary forcing file.  The others can do the job
       # and are much smaller.
-      foreach type ( ha2x1d hr2x ha2x3h ha2x1h ha2x1hi )
+      foreach type ( $types )
          # Loop over instance number
          set i=1
          while ( $i <= $data_NINST)
@@ -176,7 +177,7 @@ switch ($comp)
          echo "$comp_cmd $file_name &> compress_${task}.eo" >> mycmdfile
       endif
 
-      foreach stage ($stages)
+      foreach stage ($types)
          foreach stat ( 'mean' 'sd' )
             # E.g. CAM6_80mem.e.cam_output_mean.2010-07-15-00000.nc
             # E.g. CAM6_80mem.e.cam_output_sd.2010-07-15-00000.nc
@@ -215,14 +216,13 @@ $date
 # CHECKME ... make sure $task is <= the number of MPI tasks in this job.
 
 if ($task > 0) then
-   if ($?PBS_O_WORKDIR) then
-      mpiexec_mpt -n $task ${data_CASEROOT}/launch_cf.sh ./mycmdfile
-      set mpi_status = $status
-   else if ($?SLURM_SUBMIT_DIR) then
-      mpirun      -n $task ${data_CASEROOT}/launch_cf.sh ./mycmdfile
-      set mpi_status = $status
+   if (`which mpiexec_mpt > /dev/null; echo $status` == 0) then
+      set mpi_cmd = "mpiexec_mpt"
+   else if (`which mpirun > /dev/null; echo $status` == 0) then
+      set mpi_cmd = "mpirun"
    endif
-
+   $mpi_cmd -n $task ${data_CASEROOT}/launch_cf.sh ./mycmdfile
+   set mpi_status = $status
    echo "mpi_status = $mpi_status"
 else
    echo "No compression to do"

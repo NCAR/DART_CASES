@@ -64,6 +64,23 @@
 #SBATCH --ignore-pbs
 # 
 #-----------------------------------------
+#PBS  -N repack_st_arch.csh
+#PBS  -A P86850054
+#PBS  -q casper
+# casper requests are limited (2022-4) to 144 cpus
+# For forcing: 80        = 80 / 36 = 3 = 108 requested
+# For hist: 80           = 80 / 36 = 3
+# For state space: 2 * 4 =  8 / 36 = 1  #stages * #stats 
+# For rest: 80 + 1       = 81 / 36 = 3
+# For obs space: 1       =  1  (tar of obs_seq_finals is now done before this script)
+#PBS  -l select=3:ncpus=36:mpiprocs=36
+#PBS  -l walltime=03:20:00
+# Make output consistent with SLURM (2011-2019 files)
+#PBS  -o repack_st_arch_$PBS_JOBID.eo
+#PBS  -j oe 
+#PBS  -k eod
+#-----------------------------------------
+echo "==================================================================="
 
 # Get CASE environment variables from the central variables file.
 source ./data_scripts.csh
@@ -77,15 +94,22 @@ echo "data_proj_space  = $data_proj_space"
 echo "data_campaign    = ${data_campaign}"
 
 # > > > WARNING; cheyenne compute nodes do not have access to Campaign Storage. < < < 
-#       Run this on casper using slurm
-cd $SLURM_SUBMIT_DIR
+#       Run this on casper.
+if ($?SLURM_SUBMIT_DIR) then
+   cd $SLURM_SUBMIT_DIR
+   env | sort | grep SLURM
+else if ($?PBS_O_WORKDIR) then
+   cd $PBS_O_WORKDIR
+# Don't need after the first time, when debugging.    env | sort | grep PBS
+endif
+
 # In order to rebase the time variable NCO needs these modules
 module load nco gnu udunits
 
-# Needed for mpiexec_mpt:  setenv MPI_SHEPHERD true
-setenv date 'date --rfc-3339=ns'
+# Needed (before 2022) for mpiexec_mpt:  setenv MPI_SHEPHERD true
+setenv date_rfc 'date --rfc-3339=ns'
 
-echo "Preamble at "`date`
+echo "Preamble at "`$date_rfc`
 
 if (! -f CaseStatus) then
    echo "ERROR: this script must be run from the CESM CASEROOT directory"
@@ -121,17 +145,17 @@ endif
 # do_history     => nens * MAX(# history file types.  Currently 2 (CLM))
 # do_state_space => 1  (Could be upgraded to use #rest_dates(4-5) * #stats(4))
 
-set do_forcing     = 'false'
+set do_forcing     = 'true'
 # > > > WARNING; if restarts fails when $mm-01 is a Monday, turn off the pre_clean flag,
 #                in order to preserve what's in rest/YYYY-MM.
 set do_restarts    = 'true'
 set do_obs_space   = 'false'
-set do_history     = 'false'
+set do_history     = 'true'
 set do_state_space = 'true'
 
 # Check whether there is enough project disk space to run this.
 # The numbers added to pr_used were harvested from running repack_hwm.csh.
-set line = `gladequota | grep ncis0006 `
+set line = `gladequota | grep -m 1 scratch || exit 1 `
 set pr_used = `echo $line[2] | cut -d'.' -f1`
 # Round it up to be safe.
 @ pr_used++
@@ -177,8 +201,6 @@ endif
 set yr_mo = `printf %4d-%02d ${data_year} ${data_month}`
 set obs_space  = Diags_NTrS_${yr_mo}
 
-env | sort | grep SLURM
-
 cd $data_DOUT_S_ROOT
 pwd
 
@@ -191,9 +213,10 @@ endif
 
 if ($do_obs_space != 'true') then
    echo "SKIPPING archiving of obs_space diagnostics"
-else if (! -d esp/hist/$obs_space && ! -f esp/hist/${obs_space}.tgz) then
-   echo "ERROR: esp/hist/$obs_space does not exist."
-   echo "       run obs_diags.csh before this script."
+else if (! -d esp/hist/$obs_space && ! -f esp/hist/${obs_space}.tgz &&\
+         ! -f ${data_proj_space}/${data_CASE}/esp/hist/${yr_mo}/${obs_space}.tgz) then
+   echo "ERROR: $obs_space\* does not exist."
+   echo "       run obs_diag before this script."
    exit 20
 endif
 
@@ -230,7 +253,7 @@ endif
 #       This will make room for the next, restart file section to operate.
 echo "------------------------"
 if ($do_forcing == true) then
-   echo "Forcing starts at "`date`
+   echo "Forcing starts at "`$date_rfc`
    cd ${data_DOUT_S_ROOT}/cpl/hist
 
    # Make a list of the dates (buried in file names).
@@ -243,9 +266,15 @@ if ($do_forcing == true) then
    foreach d ($files_dates)
       if ($d:e == 'gz') then
          set ymds = $d:r:r:e
-         ${data_CASEROOT}/compress.csh gunzip $ymds "hist" "not_used"
-         if ($status != 0) then
-            echo "ERROR: Compression of coupler history files failed at `date`"
+         # and for each cpl hist file type, due to the ncpus limit of 144.
+         set cstat = 0
+         ${data_CASEROOT}/compress.csh gunzip $ymds "hist" "ha2x1d"  || set cstat = $status
+         ${data_CASEROOT}/compress.csh gunzip $ymds "hist" "hr2x"    || set cstat = $status
+         ${data_CASEROOT}/compress.csh gunzip $ymds "hist" "ha2x3h"  || set cstat = $status
+         ${data_CASEROOT}/compress.csh gunzip $ymds "hist" "ha2x1h"  || set cstat = $status
+         ${data_CASEROOT}/compress.csh gunzip $ymds "hist" "ha2x1hi" || set cstat = $status
+         if ($cstat != 0) then
+            echo "ERROR: Compression of coupler history files failed at `$date_rfc`"
             exit 25
          endif
       endif
@@ -308,37 +337,37 @@ if ($do_forcing == true) then
 
    # Append a copy of the template file, modified for each file type, into the command file.
    if (-f mycmdfile) mv mycmdfile mycmdfile_prev
-   touch mycmdfile
-   @ task = 0
+#    touch mycmdfile
+#    @ task = 0
+   @ task = $data_NINST
    foreach type (ha2x3h ha2x1h ha2x1hi ha2x1d hr2x)
-      sed -e "s#TYPE#$type#g" cmds_template >> mycmdfile
-      @ task = $task + $data_NINST
+      sed -e "s#TYPE#$type#g" cmds_template >! mycmdfile
+
+      echo "   forcing mpirun launch_cf.sh for $type starts at "`$date_rfc`
+      mpirun -n $task ${data_CASEROOT}/launch_cf.sh ./mycmdfile
+      set mpi_status = $status
+      echo "   forcing mpirun launch_cf.sh ends at "`$date_rfc`
+
+      ls *.eo >& /dev/null
+      if ($status == 0) then
+         grep ncrcat *.eo >& /dev/null
+         # grep failure = ncrcat success = "not 0"
+         set ncrcat_failed = $status
+      else
+         # No eo files = failure of something besides g(un)zip.
+         echo "cmdfile created no log files for forcing files "
+         echo "   and mpi_status of ncrcats = $mpi_status"
+         set ncrcat_failed = 0
+      endif
+   
+      if ($mpi_status == 0 && $ncrcat_failed != 0) then
+         rm mycmdfile *.eo $inst_dir:h/*/Previous/*
+      else
+         echo "ERROR in repackaging $type forcing (cpl history) files: See h\*.eo, cmds_template, mycmdfile"
+         echo '      grep ncrcat *.eo  yielded status '$ncrcat_failed
+         exit 50
+      endif
    end
-
-   echo "   forcing mpirun launch_cf.sh starts at "`date`
-   mpirun -n $task ${data_CASEROOT}/launch_cf.sh ./mycmdfile
-   set mpi_status = $status
-   echo "   forcing mpirun launch_cf.sh ends at "`date`
-
-   ls *.eo >& /dev/null
-   if ($status == 0) then
-      grep ncrcat *.eo >& /dev/null
-      # grep failure = ncrcat success = "not 0"
-      set ncrcat_failed = $status
-   else
-      # No eo files = failure of something besides g(un)zip.
-      echo "cmdfile created no log files for forcing files "
-      echo "   and mpi_status of ncrcats = $mpi_status"
-      set ncrcat_failed = 0
-   endif
-
-   if ($mpi_status == 0 && $ncrcat_failed != 0) then
-      rm mycmdfile *.eo $inst_dir:h/*/Previous/*
-   else
-      echo 'ERROR in repackaging forcing (cpl history) files: See h*.eo, cmds_template, mycmdfile'
-      echo '      grep ncrcat *.eo  yielded status '$ncrcat_failed
-      exit 50
-   endif
 
    cd ${data_DOUT_S_ROOT}
 endif
@@ -356,7 +385,7 @@ endif
 
 echo "------------------------"
 if ($do_restarts == true) then
-   echo "Restarts starts at "`date`
+   echo "Restarts starts at "`$date_rfc`
    
    cd ${data_DOUT_S_ROOT}/rest
 
@@ -506,10 +535,10 @@ if ($do_restarts == true) then
                   "&& rm ${rd}/*{dart.r,log}* &>> tar_inf_log_${rd}.eo " >> mycmdfile
       
          @ tasks = $data_NINST + 1
-         echo "Restart mpirun launch_cf.sh starts at "`date`
+         echo "Restart mpirun launch_cf.sh starts at "`$date_rfc`
          mpirun -n $tasks ${data_CASEROOT}/launch_cf.sh ./mycmdfile
          set mpi_status = $status
-         echo "Restart mpirun launch_cf.sh ends at "`date`" with status "$mpi_status
+         echo "Restart mpirun launch_cf.sh ends at "`$date_rfc`" with status "$mpi_status
     
          ls *.eo >& /dev/null
          if ($status == 0) then
@@ -576,35 +605,43 @@ if ($do_obs_space == true) then
    #  so do_obs_space is usually 'false'
    # and this tar is done in the script that also calls obs_diag: 
    # cesm2_1/diags_rean.csh
-   tar -z -c -f ${data_CASE}.cam_obs_seq_final.${yr_mo}.tgz \
-         ${data_CASE}.dart.e.cam_obs_seq_final.${yr_mo}* &
+   # Or, for archiving that's out of the usual flow (2020-01+COSMIC2),
+   # manually tar the files in $archive/esp/hist and copy the tar file to Campaign Storage.
+#    tar -z -c -f ${data_CASE}.cam_obs_seq_final.${yr_mo}.tgz \
+#          ${data_CASE}.dart.e.cam_obs_seq_final.${yr_mo}* &
 
    # Move the obs space diagnostics to $project.
-   set obs_proj_dir = ${data_proj_space}/esp/hist/${yr_mo}
+   set obs_proj_dir = ${data_proj_space}/${data_CASE}/esp/hist/${yr_mo}
    if (! -d $obs_proj_dir) mkdir -p $obs_proj_dir
 
    mv ${obs_space}.tgz $obs_proj_dir
    if ($status == 0) then
       rm -rf $obs_space
-   else
+   else if (! -f ${obs_proj_dir}/${obs_space}.tgz) then
       echo "$obs_space.tgz could not be moved.  $obs_space not removed"
    endif
 
    # Let the tar of obs_seq files finish.
-   echo "Waiting for tar of obs_seq files at date - `date --rfc-3339=ns`"
-   wait
-   if (  -f ${data_CASE}.cam_obs_seq_final.${yr_mo}.tgz && \
-       ! -z ${data_CASE}.cam_obs_seq_final.${yr_mo}.tgz) then
-      mv ${data_CASE}.cam_obs_seq_final.${yr_mo}.tgz     $obs_proj_dir
+   set obs_seq_root = ${data_CASE}.cam_obs_seq_final.${yr_mo}
+   if (  -f ${obs_seq_root}.tgz && \
+       ! -z ${obs_seq_root}.tgz) then
+      mv ${obs_seq_root}.tgz     $obs_proj_dir
       if ($status == 0) then
-         rm ${data_CASE}.dart.e.cam_obs_seq_final.${yr_mo}*
-         echo "Moved ${data_CASE}.cam_obs_seq_final.${yr_mo}.tgz "
-         echo "   to $obs_proj_dir"
+         rm ${obs_seq_root}*
+         echo "Moved ${obs_seq_root}.tgz to $obs_proj_dir"
       endif
-   else
-      echo "${data_CASE}.cam_obs_seq_final.${yr_mo}.tgz cannot be moved"
+   else if (! -f ${obs_proj_dir}/${obs_seq_root}.tgz) then
+      echo "${obs_seq_root}.tgz cannot be moved"
       exit 90
    endif
+
+   # Now obs space files are in a place where mv_to_campaign.csh can handle them.
+   # Echo the archive command to help with globus error recovery
+   # and make it easier to do that on cheyenne as well as on casper.
+   echo "${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${obs_proj_dir} " \
+                    " ${data_campaign}/${data_CASE}/esp/hist/${yr_mo}"
+   ${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${obs_proj_dir} \
+                    ${data_campaign}/${data_CASE}/esp/hist
 
    cd ${data_DOUT_S_ROOT}
    
@@ -664,7 +701,7 @@ if ($do_history == true) then
             set ls_status = $status
             if ($ls_status == 0) then
                if (! -d Previous) mkdir -p Previous
-                  mv ${data_CASE}.$models[$m]_${INST}.*.${data_year}.nc Previous 
+               mv ${data_CASE}.$models[$m]_${INST}.*.${data_year}.nc Previous 
             else
                ls Previous/${data_CASE}.$models[$m]_${INST}.*.${data_year}.nc >& /dev/null
                set ls_status = $status
@@ -712,15 +749,14 @@ if ($do_history == true) then
       sed -e "s#cpl_#$models[$m]_#g;s#cpl#$components[$m]#g"  \
           ${data_DOUT_S_ROOT}/cpl/hist/cmds_template >! $cmds_template
 
-      # Append a copy of the template file, modified for each file type, into the command file.
+      # Put a copy of the template file, modified for each file type, into the command file.
       set mycmdfile = mycmdfile_$models[$m]
-      if (-f $mycmdfile) mv ${mycmdfile} ${mycmdfile}_prev
-      touch ${mycmdfile}
 
       # The number of history files = SUM(data_NINST * hist_types_this_comp * dates_this_type)
       @ tasks = 0
       @ type = 0
       while ($type < 10)
+         if (-f $mycmdfile) mv ${mycmdfile} ${mycmdfile}_prev
          # This learns when there are no more h# types to process.
          # All the desired dates for this type will be appended 
          # to the yearly file for EACH member.
@@ -738,48 +774,51 @@ if ($do_history == true) then
          # There are data_NINST commands in cmds_template.
          # If cam.h0 ends up with more than PHIS, don't do this if test.
          # and fix the h0 purging in the state_space section.
+         @ tasks = $data_NINST
          if ($models[$m] == 'cam' && $type == 0) then
             # If a single/few cam.h0 files need to be saved (for PHIS):
 #             sed -e "s#TYPE#h$type#g" ${cmds_template} | grep _0001 >> ${mycmdfile}
 #             @ tasks = $tasks + 1
          else
-            sed -e "s#TYPE#h$type#g" ${cmds_template} >> ${mycmdfile}
-            @ tasks = $tasks + $data_NINST
+            sed -e "s#TYPE#h$type#g" ${cmds_template} > ${mycmdfile}
+
          endif
+   
+         if (-z $mycmdfile) then
+            rm ${cmds_template}  ${mycmdfile} 
+            echo "Skipping $components[$m]/hist type $type because $mycmdfile has size 0"
+         else
+            echo "   history mpirun launch_cf.sh starts at "`$date_rfc`
+            mpirun -n $tasks ${data_CASEROOT}/launch_cf.sh ./${mycmdfile}
+            set mpi_status = $status
+            echo "   history mpirun launch_cf.sh ends at "`$date_rfc`
+         
+            echo "Checking for the existence of cmdfile error files, which would mean 'stop'"
+            ls *.eo >& /dev/null
+            if ($status == 0) then
+               grep ncrcat *.eo >& /dev/null
+               # grep failure = ncrcat success = "not 0"
+               set ncrcat_failed = $status
+            else
+               echo "cmdfile created no log files for history files "
+               echo "   and mpi_status of ncrcats = $mpi_status"
+               set ncrcat_failed = 0
+            endif
+         
+            if ($mpi_status == 0 && $ncrcat_failed != 0) then
+               rm ${mycmdfile} *.eo $inst_dir:h/*/Previous/*
+            else
+               echo "ERROR in repackaging history files: See $components[$m]/hist/"\
+                    'h*.eo, cmds_template*, mycmdfile*'
+               echo '      grep ncrcat *.eo  yielded status '$ncrcat_failed
+               exit 130
+            endif
+         endif
+
          @ type++
       end
-   
-      if (-z $mycmdfile) then
-         rm ${cmds_template}  ${mycmdfile} 
-         echo "Skipping $components[$m]/hist because $mycmdfile has size 0"
-      else
-         echo "   history mpirun launch_cf.sh starts at "`date`
-         mpirun -n $tasks ${data_CASEROOT}/launch_cf.sh ./${mycmdfile}
-         set mpi_status = $status
-         echo "   history mpirun launch_cf.sh ends at "`date`
-      
-         echo "Checking for the existence of cmdfile error files, which would mean 'stop'"
-         ls *.eo >& /dev/null
-         if ($status == 0) then
-            grep ncrcat *.eo >& /dev/null
-            # grep failure = ncrcat success = "not 0"
-            set ncrcat_failed = $status
-         else
-            echo "cmdfile created no log files for history files "
-            echo "   and mpi_status of ncrcats = $mpi_status"
-            set ncrcat_failed = 0
-         endif
-      
-         if ($mpi_status == 0 && $ncrcat_failed != 0) then
-            rm ${cmds_template}  ${mycmdfile} *.eo $inst_dir:h/*/Previous/*
-         else
-            echo "ERROR in repackaging history files: See $components[$m]/hist/"\
-                 'h*.eo, cmds_template*, mycmdfile*'
-            echo '      grep ncrcat *.eo  yielded status '$ncrcat_failed
-            exit 130
-         endif
-      endif
 
+      rm ${cmds_template}
       cd ${data_DOUT_S_ROOT}
 
       @ m++
@@ -800,6 +839,12 @@ if ($do_state_space == true) then
    echo "Location for state space is `pwd`"
    
    mkdir $yr_mo
+   if (-f mycmdfile) then
+      mv mycmdfile mycmdfile_prev
+      rm *.eo
+   endif
+   touch mycmdfile
+
    foreach stage ($stages_all)
       set ext = e
       if ($stage == output) set ext = i
@@ -810,18 +855,41 @@ if ($do_state_space == true) then
          if ($status == 0) set ext = rh
          echo "stage, stat, ext = $stage $stat $ext"
    
-         if (! -f     ${yr_mo}/${data_CASE}.dart.${ext}.cam_${stage}_${stat}.${yr_mo}.tar) then
-            tar -c -f ${yr_mo}/${data_CASE}.dart.${ext}.cam_${stage}_${stat}.${yr_mo}.tar  \
-                               ${data_CASE}.dart.${ext}.cam_${stage}_${stat}.${yr_mo}-*
-            if ($status == 0) then
-               rm ${data_CASE}.dart.${ext}.cam_${stage}_${stat}.${yr_mo}-*
-            else
-               echo "ERROR: tar -c -f ${data_CASE}.dart.${ext}.cam_${stage}_${stat}.${yr_mo}.tar failed"
-               exit 140
-            endif
+         set files = "${data_CASE}.dart.${ext}.cam_${stage}_${stat}.${yr_mo}"
+         if (! -f     ${yr_mo}/$files.tar) then
+            echo "tar -c -f ${yr_mo}/${files}.tar" \
+                      " ${files}-*  &>  tar_${stage}_${stat}.eo" \
+                 " && rm ${files}-* &>> tar_${stage}_${stat}.eo" \
+                 >> mycmdfile
          endif
       end
    end
+   @ tasks = $#stages_all * 4
+
+   echo "Restart mpirun launch_cf.sh starts at "`$date_rfc`
+   mpirun -n $tasks ${data_CASEROOT}/launch_cf.sh ./mycmdfile
+   set mpi_status = $status
+   echo "Restart mpirun launch_cf.sh ends at "`$date_rfc`" with status "$mpi_status
+
+   ls *.eo >& /dev/null
+   if ($status == 0) then
+      grep tar *.eo | grep -v log >& /dev/null
+      # grep failure = tar success = "not 0"
+      set ncrcat_failed = $status
+   else
+      # No eo files = failure of something besides tar.
+      set ncrcat_failed = 0
+      echo "Restart file set, tar mpi_status = $mpi_status"
+   endif
+      
+   if ($mpi_status == 0 && $ncrcat_failed != 0) then
+      rm tar*.eo
+   else
+      echo 'ERROR in repackaging DART state space files: See tar*.eo, mycmdfile'
+      echo '      grep tar *.eo  yielded status '$ncrcat_failed
+      ls -l *.eo
+      exit 60
+   endif
 
    # Echo the archive command to help with globus error recovery
    # and make it easier to do that on cheyenne as well as on casper.
@@ -830,7 +898,7 @@ if ($do_state_space == true) then
 
    ${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/esp/hist/${yr_mo}  \
                                   ${data_campaign}/${data_CASE}/esp/hist
- 
+
 # The ensemble means are archived every 6 hours, because they're useful and small.
 # It also may be useful to have some complete ensembles of model states,
 # so those are saved less often (weekly, plus some others sneak in).
@@ -851,30 +919,57 @@ if ($do_state_space == true) then
       foreach f ($files)
          # These files may or may not be compressed, so extracting the date
          # part of the file name is a bit tricky.
-         set date = $f:r:e
-         if ($date == nc) set date = $f:r:r:e
-         set dates = ($dates $date)
+         set d = $f:r:e
+         if ($d == nc) set d = $f:r:r:e
+         set dates = ($dates $d)
       end
       echo " "
       echo "Archiving atm/hist/{$dates} to Campaign Storage"
       
-# >>> This could be done a bit faster (1/(#dates*#stages))with mycmdfile code.
-      foreach date ($dates)
+      if (-f mycmdfile) then
+         mv mycmdfile mycmdfile_prev
+         rm *.eo
+      endif
+      touch mycmdfile
+
+      @ tasks = $#dates * $#stages_all
+      foreach d ($dates)
       foreach stage ($stages_all)
       if ($stage != output) then
-   
-         tar -c -f ${yr_mo}/${data_CASE}.cam_allinst.e.${stage}.${date}.tar \
-                            ${data_CASE}.cam_[0-9]*.e.${stage}.${date}*
-         if ($status == 0) then
-            rm ${data_CASE}.cam_[0-9]*.e.${stage}.${date}*
-         else
-            echo "ERROR: tar -c -f ${data_CASE}.cam_allinst.e.$stage.${date}.tar failed" 
-            exit 150
-         endif
+         echo "tar -c -f ${yr_mo}/${data_CASE}.cam_allinst.e.${stage}.${d}.tar" \
+                                " ${data_CASE}.cam_[0-9]*.e.${stage}.${d}* &>  tar_${stage}_${d}.eo" \
+                          " && rm ${data_CASE}.cam_[0-9]*.e.${stage}.${d}* &>> tar_${stage}_${d}.eo" \
+              >> mycmdfile
       endif
       end
       end
       
+      echo "State space, non-output ensembles mpirun launch_cf.sh starts at "`$date_rfc`
+      mpirun -n $tasks ${data_CASEROOT}/launch_cf.sh ./mycmdfile
+      set mpi_status = $status
+      echo "State space, non-output ensembles mpirun launch_cf.sh ends at "`$date_rfc`\
+           " with status "$mpi_status
+ 
+      ls *.eo >& /dev/null
+      if ($status == 0) then
+         grep tar *.eo | grep -v log >& /dev/null
+         # grep failure = tar success = "not 0"
+         set ncrcat_failed = $status
+      else
+         # No eo files = failure of something besides tar.
+         set ncrcat_failed = 0
+         echo "Restart file set, tar mpi_status = $mpi_status"
+      endif
+   
+      if ($mpi_status == 0 && $ncrcat_failed != 0) then
+         rm tar*.eo
+      else
+         echo 'ERROR in repackaging nonoutput CAM ensemble files: See tar*.eo, mycmdfile'
+         echo '      grep tar *.eo  yielded status '$ncrcat_failed
+         ls -l *.eo
+         exit 60
+      endif
+
       # Echo the archive command to help with globus error recovery
       # and make it easier to do that on cheyenne as well as on casper.
       echo "${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/atm/hist/$yr_mo " \

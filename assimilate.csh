@@ -728,6 +728,7 @@ if ($USING_POSTE_INFLATION == true) then
 
          set latest_mean = `head -n 1 latestfile`
          set latest_sd   = `tail -n 1 latestfile`
+         ${REMOVE} input_postinf*.nc
          ${LINK} $latest_mean input_postinf_mean.nc || exit 120
          ${LINK} $latest_sd   input_postinf_sd.nc   || exit 121
 
@@ -1136,7 +1137,10 @@ endif
 # echo "STARTING: compressing coupler history files and DART files at `date`"
 # ${CASEROOT}/compress.csh gzip $CASE $ATM_DATE_EXT $ensemble_size "hist dart" "$stages_all"
 echo "STARTING: compressing coupler history files at `date`"
-${CASEROOT}/compress.csh gzip $ATM_DATE_EXT "hist" "$stages_all"
+# Orig (mistaken, but ignored, last arg when "hist" is the component)
+# ${CASEROOT}/compress.csh gzip $ATM_DATE_EXT "hist" "$stages_all"
+# Adapt to new compress.csh that works with casper's ncpus limit
+${CASEROOT}/compress.csh gzip $ATM_DATE_EXT "hist" "ha2x1d hr2x ha2x3h ha2x1h ha2x1hi"
 
 if ($status != 0) then
    echo "ERROR: Compression of coupler history files and DART files failed at `date`"

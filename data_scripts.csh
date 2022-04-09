@@ -5,6 +5,8 @@
 # It should only be referenced to process the most recently completed month.
 # If some other month must be processed, update the data_year and data_month
 # at the end.
+# Some scripts write directly to data_proj_space, so it should not be data_campaign.
+# (repack_st_arch.csh: do_hist yearly accumulating files, do_obs_space (usually false))
 
 setenv  data_NINST            80
 setenv  data_DART_src         /glade/u/home/raeder/DART/reanalysis_git
@@ -12,8 +14,7 @@ setenv  data_CASE             f.e21.FHIST_BGC.f09_025.CAM6assim.011
 setenv  data_CASEROOT         /glade/work/raeder/Exp/${data_CASE}
 setenv  data_scratch          /glade/scratch/raeder/${data_CASE}
 setenv  data_campaign         /gpfs/csfs1/cisl/dares/Reanalyses
-# setenv  data_proj_space       /glade/p/nsc/ncis0006/Reanalyses
-setenv  data_proj_space       ${data_campaign}/${data_CASE}/project
+setenv  data_proj_space       ${data_scratch}/project
 setenv  data_CESM_python      /glade/work/raeder/Models/cesm2_1_relsd_m5.6/cime/scripts/lib/CIME 
 setenv  data_DOUT_S_ROOT      /glade/scratch/raeder/${data_CASE}/archive
 

@@ -11,9 +11,9 @@ set MYNAME = $0:t
 set INSTRUCTIONS = $MYNAME.$$
 cat << ENDOFINSTRUCTIONS >! $INSTRUCTIONS
 
-$MYNAME removes output from \$DOUT_S_ROOT (\$local_archive) for a specified month.
-The default action is to simply list what would be purged. An optional argument
-triggers the actual removal of the files.
+$MYNAME lists (default) and optionally removes output from \$DOUT_S_ROOT (\$local_archive) for a specified month.
+The list is written to a file in \$DOUT_S_ROOT/logs.
+An optional argument triggers the actual removal of the files.
 
 $MYNAME must be run from \$CASEROOT
 

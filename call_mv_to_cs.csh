@@ -3,8 +3,14 @@
 # Last mod time before this comment was 2019-9-7.
 # ? Script to use with qcmd?
 
-set y_m = 2018-10
+set y_m = Diags_NTrS_2020-01-0to3
 
+./mv_to_campaign.csh  $y_m ${s}/${casename}/$y_m \
+                  /gpfs/csfs1/cisl/dares/Reanalyses/${casename}
+exit
+
+# ----------------------------
+set y_m = 2020-01
 ./mv_to_campaign.csh  $y_m ${s}/${casename}/archive/rest/$y_m \
                   /gpfs/csfs1/cisl/dares/Reanalyses/${casename}/rest
 

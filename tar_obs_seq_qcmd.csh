@@ -7,9 +7,10 @@
 #  Usage: edit this file to change date
 #         > remote tar_obs_seq_qcmd.csh
 
-set year_mm  = 2019-10
+set year_mm  = 2020-01
 set case     = f.e21.FHIST_BGC.f09_025.CAM6assim.011
-set proj_dir = "/glade/p/nsc/ncis0006/Reanalyses/${case}/esp/hist/${year_mm}"
+# set proj_dir = "/glade/p/nsc/ncis0006/Reanalyses/${case}/esp/hist/${year_mm}"
+set proj_dir = "/glade/scratch/raeder/${case}/project/esp/hist/${year_mm}"
 set file     = "${case}.cam_obs_seq_final.${year_mm}.tgz"
 
 if (! -d $proj_dir) mkdir -p $proj_dir

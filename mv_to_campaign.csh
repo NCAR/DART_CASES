@@ -89,13 +89,14 @@ echo Copy $SRC_DIR to campaign storage $CS_DIR >>& $glog
 # > globus endpoint activate --help
 # will show obscura such as --myproxy (below).
 # module load gnu python
-# module load gnu python/3.6.8
-module load gnu conda/latest
+module load gnu python/3.6.8
+# conda doesn't work in my batch environment.
+# module load gnu conda/latest
 
 # Enable the NCAR Python Library (NPL) virtual environment 
 # This command activates the 'globus' command
-# ncar_pylib 20190326
-conda activate npl
+ncar_pylib 20190326
+# conda activate npl
 # This seems to have been updated for NPL on 2021-3-17.
 
 # Retrieve endpoint IDs and store them as variables using globus.
