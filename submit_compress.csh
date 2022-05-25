@@ -34,7 +34,6 @@
 #PBS  -l select=9:ncpus=36:mpiprocs=36
 #PBS  -l walltime=00:20:00
 #PBS  -o compress.out
-#PBS  -k eod
 #PBS  -j oe 
 #PBS  -k eod 
 

@@ -88,6 +88,10 @@ if (($start[1] % 4) == 0 ) set days_in_mo[2] = 29
 @ months = $end[2] - $start[2]
 @ days   = $end[3] - $start[3]
 @ secs   = $end[4] - $start[4]
+if ($months > 2) then
+   echo "Cannot handle more than a month"
+   exit 45
+endif
 if ($secs < 0 ) then
    @ secs = $secs + 86400
    @ days--
@@ -190,6 +194,7 @@ if ("$first_date" == "$last_date" ) then
    ln -s case_run_only_assim.py case_run.py
    
    set init_files = `wc -l ${data_scratch}/run/cam_init_files`
+   if ($status != 0) echo "If the first assim of a new exp failed, create cam_init_files?"
    echo "Checking numbers of files " $init_files[1] ${data_NINST}
    if ( $init_files[1] != ${data_NINST} ) then
       echo "ERROR: the forecast didn't finish; not enough files in cam_init_files"

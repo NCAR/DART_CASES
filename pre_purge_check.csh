@@ -12,7 +12,8 @@
 # that take an unknown amount of time to finish.
 # Usage: after case.st_archive and repack_st_archive are finished,
 #        on casper:
-#        % pre_purge.csh 
+#        % pre_purge_check.csh > pre_purge.YYYY-MM
+#     or % pre_purge_check.csh |& tee pre_purge_check.YYYY-MM
 
 # On the data-access node.
 
@@ -27,7 +28,7 @@ echo "data_campaign   = ${data_campaign}"
 
 set ym = `printf %s-%02d $data_year $data_month`
 
-cd ${data_proj_space}/${data_CASE}
+cd ${data_proj_space}
 
 echo "Coupler history (forcing) files in project space `pwd`:"
 ls -l cpl/hist/00${data_NINST}/*${data_year}*

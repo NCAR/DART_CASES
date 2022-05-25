@@ -23,9 +23,7 @@
 #     That's assuming that processing the cpl hist files is first, <<<
 #     after which lots of space is freed up.  If it's not,         <<<
 #     the lnd history files needs almost 3 Tb additional space.    <<<
-# >>> Log in to globus (see mv_to_campaign.csh for instructions).  <<<
-# >>> From a casper window (but not 'ssh'ed to data-access.ucar.edu)
-#     submit this script from the CESM CASEROOT directory.         <<<
+# >>> submit this script from the CESM CASEROOT directory.         <<<
 
 #-----------------------------------------
 # Submitting the job to casper (or other NCAR DAV clusters?) requires using slurm.
@@ -74,11 +72,14 @@
 # For rest: 80 + 1       = 81 / 36 = 3
 # For obs space: 1       =  1  (tar of obs_seq_finals is now done before this script)
 #PBS  -l select=3:ncpus=36:mpiprocs=36
-#PBS  -l walltime=03:20:00
-# Make output consistent with SLURM (2011-2019 files)
-#PBS  -o repack_st_arch_$PBS_JOBID.eo
+#PBS  -l walltime=04:20:00
+# Can only make output consistent with SLURM (2011-2019 files)
+# by copying the eo file to a new name at the end.
+#PBS  -o repack_st_arch.eo
 #PBS  -j oe 
 #PBS  -k eod
+#PBS  -m ae
+#PBS  -M raeder@ucar.edu
 #-----------------------------------------
 echo "==================================================================="
 
@@ -100,6 +101,7 @@ if ($?SLURM_SUBMIT_DIR) then
    env | sort | grep SLURM
 else if ($?PBS_O_WORKDIR) then
    cd $PBS_O_WORKDIR
+   echo "JOBID = $PBS_JOBID"
 # Don't need after the first time, when debugging.    env | sort | grep PBS
 endif
 
@@ -179,8 +181,6 @@ if ($#argv != 0) then
    echo "Usage:  "
    echo "Before running this script"
    echo "    Run st_archive and obs_diags.csh. "
-   echo "    Log in to globus (see mv_to_campaign.csh for instructions)."
-   echo "    From a casper window (but not 'ssh'ed to data-access.ucar.edu)"
    echo "    submit this script from the CESM CASEROOT directory. "
    echo "Call by user or script:"
    echo "   repack_st_arch.csh project_dir campaign_dir yr_mo [do_this=false] ... "
@@ -214,7 +214,7 @@ endif
 if ($do_obs_space != 'true') then
    echo "SKIPPING archiving of obs_space diagnostics"
 else if (! -d esp/hist/$obs_space && ! -f esp/hist/${obs_space}.tgz &&\
-         ! -f ${data_proj_space}/${data_CASE}/esp/hist/${yr_mo}/${obs_space}.tgz) then
+         ! -f ${data_proj_space}/esp/hist/${yr_mo}/${obs_space}.tgz) then
    echo "ERROR: $obs_space\* does not exist."
    echo "       run obs_diag before this script."
    exit 20
@@ -287,7 +287,7 @@ if ($do_forcing == true) then
    set i = 1
    while ($i <= $data_NINST)
       set INST = `printf %04d $i`
-      set inst_dir = ${data_proj_space}/${data_CASE}/cpl/hist/${INST}
+      set inst_dir = ${data_proj_space}/cpl/hist/${INST}
       # "TYPE" will be replaced by `sed` commands below.
       set yearly_file = ${data_CASE}.cpl_${INST}.TYPE.${data_year}.nc
 
@@ -377,7 +377,7 @@ endif
 #    Package by member and date, to allow users 
 #      to grab only as many members as needed.
 #      a la ./package_restart_members.csh
-#    Send to campaign storage using ./mv_to_campaign.csh
+#    Send to campaign storage using gci (globus).
 # This requires space in $scratch to house the new tar files.
 # The files must exist there until globus is done copying them to campaign storage.
 # If $scratch has filled with assimilation output, then the forcing file
@@ -389,12 +389,12 @@ if ($do_restarts == true) then
    
    cd ${data_DOUT_S_ROOT}/rest
 
-   # Pre_clean deals with the feature of mv_to_campaign.csh,
+   # Pre_clean deals with the feature of `gci cput`,
    # which copies all the contents of a directory to campaign storage.
    # If the contents of that directory are left over from a previous repackaging,
    # the directory needs to be cleaned out.
    set pre_clean = true
-   # During debugging, it may be helpful to *not* clean out mv_to_campaign's directory.
+   # During debugging, it may be helpful to *not* clean out the source directory.
 
 
    # Files_to_save keeps track of whether any restart sets have been packaged
@@ -417,7 +417,7 @@ if ($do_restarts == true) then
       if ($status == 0) continue
 
       # Ignore directories names that don't have '-'.
-      # This doesn't apply to the $yr_mo (mv_to_campaign.csh) directory
+      # This doesn't apply to the $yr_mo (gci source) directory
       # because it didn't exist when the set of $rd was defined for this loop.
       echo $rd | grep '\-'
       if ($status != 0) continue
@@ -433,9 +433,9 @@ if ($do_restarts == true) then
       if ($pre_clean == true) then
          set pre_clean = false
 
-         # Mv_to_campaign.csh is designed to move everything in a directory to campaign storage.
+         # `gci cput` moves everything in a directory to campaign storage.
          # Clean up and/or make a new directory for the repackaged files 
-         # and send that directory to mv_to_campaign.csh.
+         # and feed that directory to `gci cput`.
    
          if (-d $yr_mo) then
             rm ${yr_mo}/*
@@ -563,11 +563,11 @@ if ($do_restarts == true) then
       endif
 
       # Copy all the restart tars to campaign storage
-      # It's OK to do this within the loop because mv_to_campaign.csh
+      # It's OK to do this within the loop because `gci cput`
       # uses the --sync-level argument to globus to move only the new(er) files
       # to campaign storage.
       if ($files_to_save == true) then
-         # Remove the empty directory to prevent mv_to_campaign.csh from archiving it.
+         # Remove the empty directory to prevent `gci cput` from archiving it.
          rmdir $rd
          if ($status != 0) then
             echo "ERROR; $rd is not empty, Cannot remove it"
@@ -577,13 +577,15 @@ if ($do_restarts == true) then
    
          # Echo the archive command to help with globus error recovery
          # and make it easier to do that on cheyenne as well as on casper.
-         echo "${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/rest/$yr_mo " \
-                                              " ${data_campaign}/${data_CASE}/rest"
-         ${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/rest/$yr_mo \
-                                        ${data_campaign}/${data_CASE}/rest
+         # echo "${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/rest/$yr_mo " \
+         #                                      " ${data_campaign}/${data_CASE}/rest"
+         echo "gci cput -r ${data_DOUT_S_ROOT}/rest/${yr_mo}: "
+         echo "    ${data_campaign}/${data_CASE}/rest/$yr_mo >&! gci_rest_${yr_mo}.log"
+         gci cput -r ${data_DOUT_S_ROOT}/rest/${yr_mo}:${data_campaign}/${data_CASE}/rest/$yr_mo \
+             >&! gci_rest_${yr_mo}.log
+#          ${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/rest/$yr_mo \
+#                                         ${data_campaign}/${data_CASE}/rest
 
-         echo "WARNING: mv_to_campaign.csh ONLY SUBMITS THE REQUEST to globus"
-         echo "         The directory must be manually removed after globus completes the copy."
       endif
    end
 
@@ -611,7 +613,7 @@ if ($do_obs_space == true) then
 #          ${data_CASE}.dart.e.cam_obs_seq_final.${yr_mo}* &
 
    # Move the obs space diagnostics to $project.
-   set obs_proj_dir = ${data_proj_space}/${data_CASE}/esp/hist/${yr_mo}
+   set obs_proj_dir = ${data_proj_space}/esp/hist/${yr_mo}
    if (! -d $obs_proj_dir) mkdir -p $obs_proj_dir
 
    mv ${obs_space}.tgz $obs_proj_dir
@@ -635,13 +637,13 @@ if ($do_obs_space == true) then
       exit 90
    endif
 
-   # Now obs space files are in a place where mv_to_campaign.csh can handle them.
+   # Now obs space files are in a place where `gci cput` can handle them.
    # Echo the archive command to help with globus error recovery
    # and make it easier to do that on cheyenne as well as on casper.
-   echo "${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${obs_proj_dir} " \
-                    " ${data_campaign}/${data_CASE}/esp/hist/${yr_mo}"
-   ${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${obs_proj_dir} \
-                    ${data_campaign}/${data_CASE}/esp/hist
+   echo "gci cput -r ${obs_proj_dir}: "
+   echo "    ${data_campaign}/${data_CASE}/esp/hist/$yr_mo >&! gci_obs_seq_${yr_mo}.log"
+   gci cput -r ${obs_proj_dir}:${data_campaign}/${data_CASE}/esp/hist/$yr_mo \
+       >&! gci_obs_seq_${yr_mo}.log
 
    cd ${data_DOUT_S_ROOT}
    
@@ -688,7 +690,7 @@ if ($do_history == true) then
       @ comp_ens_size = ( $data_NINST - $i ) + 1
       while ($i <= $data_NINST)
          set INST = `printf %04d $i`
-         set inst_dir = ${data_proj_space}/${data_CASE}/$components[$m]/hist/${INST}
+         set inst_dir = ${data_proj_space}/$components[$m]/hist/${INST}
 
          if (-d $inst_dir) then
             cd ${inst_dir}
@@ -893,11 +895,10 @@ if ($do_state_space == true) then
 
    # Echo the archive command to help with globus error recovery
    # and make it easier to do that on cheyenne as well as on casper.
-   echo "${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/esp/hist/${yr_mo} " \
-        " ${data_campaign}/${data_CASE}/esp/hist"
-
-   ${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/esp/hist/${yr_mo}  \
-                                  ${data_campaign}/${data_CASE}/esp/hist
+   echo "gci cput -r ${data_DOUT_S_ROOT}/esp/hist/${yr_mo}: "
+   echo "${data_campaign}/${data_CASE}/esp/hist/$yr_mo >&! gci_esp_${yr_mo}.log"
+   gci cput -r ${data_DOUT_S_ROOT}/esp/hist/${yr_mo}:${data_campaign}/${data_CASE}/esp/hist/$yr_mo \
+       >&! gci_esp_${yr_mo}.log
 
 # The ensemble means are archived every 6 hours, because they're useful and small.
 # It also may be useful to have some complete ensembles of model states,
@@ -972,11 +973,10 @@ if ($do_state_space == true) then
 
       # Echo the archive command to help with globus error recovery
       # and make it easier to do that on cheyenne as well as on casper.
-      echo "${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/atm/hist/$yr_mo " \
-           " ${data_campaign}/${data_CASE}/atm/hist"
-
-      ${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/atm/hist/$yr_mo \
-                                     ${data_campaign}/${data_CASE}/atm/hist
+      echo "gci cput -r ${data_DOUT_S_ROOT}/atm/hist/${yr_mo}: "
+      echo "${data_campaign}/${data_CASE}/atm/hist/$yr_mo >&! gci_atm_${yr_mo}.log"
+      gci cput -r ${data_DOUT_S_ROOT}/atm/hist/${yr_mo}:${data_campaign}/${data_CASE}/atm/hist/$yr_mo \
+          >&! gci_atm_${yr_mo}.log
    
    endif
 
@@ -1014,10 +1014,10 @@ if ($do_state_space == true) then
       rm $list
       # Echo the archive command to help with globus error recovery
       # and make it easier to do that on cheyenne as well as on casper.
-      echo "${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/logs/${yr_mo} " \
-           "${data_campaign}/${data_CASE}/logs"
-      ${data_CASEROOT}/mv_to_campaign.csh ${yr_mo} ${data_DOUT_S_ROOT}/logs/${yr_mo} \
-         ${data_campaign}/${data_CASE}/logs
+      echo "gci cput -r ${data_DOUT_S_ROOT}/logs/${yr_mo}: "
+      echo "${data_campaign}/${data_CASE}/logs/$yr_mo >&! gci_logs_${yr_mo}.log"
+      gci cput -r ${data_DOUT_S_ROOT}/logs/${yr_mo}:${data_campaign}/${data_CASE}/logs/$yr_mo \
+          >&! gci_logs_${yr_mo}.log
    else
       echo "Tar of da.logs of $yr_mo failed.  Not archiving them"
    endif
@@ -1027,5 +1027,15 @@ if ($do_state_space == true) then
 endif 
 
 #--------------------------------------------
+
+cd $data_CASEROOT
+if ($?PBS_JOBID) then
+   echo "PBS_JOBNAME = $PBS_JOBNAME"
+   if (-f $PBS_JOBNAME:r.eo) then
+      cp $PBS_JOBNAME:r.eo $PBS_JOBNAME:r_${yr_mo}.eo
+   else
+      echo "$PBS_JOBNAME:r.eo does not exist, despite PBS -k eod"
+   endif
+endif
 
 exit 0

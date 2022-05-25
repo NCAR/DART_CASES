@@ -18,7 +18,7 @@
 #          or open a window on casper.
 #        It may be enough to 
 #        > module load gnu python
-#        > ncar_pylib 20190326
+#        > ncar_pylib 20201220
 #        OR log in through the globus file manager.
 #        In either case:
 #        > globus login
@@ -123,8 +123,12 @@ echo EP_CS = $EP_CS
 # with a lifetime of 30 days.  "activate" first tries auto-activation.
 # If that fails, it tries the activation method from the command line.
 # But all of those options require a browser (not available on batch nodes)
-# or user name and password (which is insecure if provided by the script).
+# or CIT user name and password (which is insecure if provided by the script).
 # So this activation relies on auto-activation.
+# Debug 2022-5; auto-activation no longer works for the glade endpoint, even interactively.
+#       It did work for the CS endpoint interactively (only).  Maybe because I activated it
+#       manually on the web site first.
+#       It worked in mid-April.
 # It may be redundant, but maybe this script needs an explicit activation.
 foreach ep ($EP_SRC $EP_CS)
    # Check if endpoint is activated
@@ -135,11 +139,17 @@ foreach ep ($EP_SRC $EP_CS)
    # if ( $status != 0 ) then
    if ( `echo $EXPIRE` == 'None' ) then
       globus endpoint activate $ep
+# Debug 5-20 activation failure.
+# Job output says "The endpoint could not be auto-activated."
+#     but this error section was not entered
       if ( $status != 0 ) then
          echo "Fatal: NCAR endpoint $ep isn't activated." > $glog
          echo "       Aborting transfer..." >> $glog
          echo "Failed: $AN_DATE to Campaign Storage!" > ~/GLOBUS-ERROR.$AN_DATE
          exit 1
+# Debug 5-20
+      else
+         echo "activation status was 0, but there was an error (see previous line?)"
       endif
    else
       echo Endpoint $ep is activated until $EXPIRE

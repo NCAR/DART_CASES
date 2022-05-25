@@ -25,7 +25,8 @@ if ($status == 0) then
    # The restart set exists in the RUNDIR, regardless of the short term archiver.
    setenv DOUT_S FALSE
 else
-   set hide_loc = `ls $RUNDIR:h/Hide*/*_0001.r.${restart_time}.nc`
+   # hide_loc must be a single path name, for use below
+   set hide_loc = `ls $RUNDIR:h/Hide*/*cam_0001.r.${restart_time}.nc`
    if ($status == 0) then
       # The restart set exists in a Hide directory, regardless of the short term archiver.
       setenv DOUT_S FALSE
@@ -162,7 +163,9 @@ else     # CONTINUE_RUN == FALSE
 endif
 
 ls *inf*${restart_time}* >& /dev/null
-if ($status != 0) then 
+if ($status == 0) then 
+   echo "The inflation files were found.  They will be linked to generic names by assimilte.csh"
+else
    echo ""
    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
    echo "WARNING:  no inflation files were found for $restart_time"

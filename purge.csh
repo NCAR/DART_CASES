@@ -21,7 +21,7 @@ Usage:
 $MYNAME arg1 [arg2] 
 
    arg1 may be '--help' , print this help file
-   arg1 may be a date in the form YYYY_MM to specify the month to be purged
+   arg1 may be a date in the form YYYY-MM to specify the month to be purged
 
    If arg2 is specified and has the value 'remove', the files will be removed.
 
@@ -124,7 +124,7 @@ set CPL_MONTH = `echo $CPL_DATE[2] | bc`
 set model_yymm = `printf %4d-%02d   ${CPL_YEAR}   ${CPL_MONTH}`
 set purge_yymm = `printf %4d-%02d ${purge_year} ${purge_month}`
 
-if ( model_yymm == purge_yymm ) then
+if ( $model_yymm == $purge_yymm ) then
    echo "ERROR: cannot purge active month ... $model_yymm"
    echo "ERROR: can only purge previous months."
    exit 2
@@ -136,7 +136,7 @@ set yr_mo = $purge_yymm
 
 set lists_file = ${data_DOUT_S_ROOT}/logs/rm_${yr_mo}.lists
 echo "FILE CONTAINING LIST OF FILES TO BE REMOVED:"
-echo "   $lists_file"
+echo "   $lists_file.gz"
 echo ""
 
 # This will handle running the script in listing mode and then purging mode.
@@ -170,6 +170,7 @@ cat $lists_file
 # These have been appended to the yearly files for archiving.
 if ($do_forcing == true) then
    cd ${data_DOUT_S_ROOT}/cpl/hist
+   echo ' ' >>& $lists_file
    pwd >>& $lists_file
    echo "Processing "`pwd`" at "`date`
 
@@ -193,9 +194,14 @@ endif
 # The following ${yr_mo} directories have been archived to Campaign Storage.
 if ($do_restarts == true) then
    cd ${data_DOUT_S_ROOT}/rest
+   echo ' ' >>& $lists_file
    pwd >>& $lists_file
    echo "Processing "`pwd`" at "`date`
 
+   # This lists both the monthly restart directory (e.g. 2020-01)
+   # and the daily directories which were used to make it (2020-01-06-00000, ...).
+   # The monthly directory is not needed if it was successfull copied to Campaign Storage
+   # by repack_st_arch.csh.
    echo      "Restarts ${yr_mo}\*" >>& $lists_file
    ${RECURSIVE_ACTION} ${yr_mo}*   >>& $lists_file
 
@@ -215,6 +221,7 @@ if ($do_history == true) then
    set m = 1
    while ($m <= $#components)
       cd ${data_DOUT_S_ROOT}/$components[$m]/hist
+      echo ' ' >>& $lists_file
       pwd >>& $lists_file
       echo "Processing "`pwd`" at "`date`
       @ type = 0
@@ -238,11 +245,13 @@ endif
 if ($do_state_space == true) then
    cd ${data_DOUT_S_ROOT}/esp/hist
    echo "Processing "`pwd`" at "`date`
+   echo ' ' >>& $lists_file
    pwd                          >>& $lists_file
    ${RECURSIVE_ACTION} $yr_mo   >>& $lists_file
 
    cd ${data_DOUT_S_ROOT}/atm/hist
    echo "Processing "`pwd`" at "`date`
+   echo ' ' >>& $lists_file
    pwd                                 >>& $lists_file
    ${RECURSIVE_ACTION} $yr_mo          >>& $lists_file
    ${RECURSIVE_ACTION} *.h0.*$yr_mo*   >>& $lists_file
@@ -252,6 +261,7 @@ if ($do_state_space == true) then
    cd ${data_DOUT_S_ROOT}/logs
    echo "Processing "`pwd`" at "`date`
    # This looks misdirected at first, but $lists_file has 'logs/' in it.
+   echo ' ' >>& $lists_file
    pwd                        >>& $lists_file
    ${RECURSIVE_ACTION} $yr_mo >>& $lists_file
    ${RECURSIVE_ACTION} {atm,cpl,ice,lnd,ocn,rof}_00[0-9][02-9].log.* >>& $lists_file
@@ -264,6 +274,7 @@ endif
 # Purge leftover junk in $RUNDIR (scratch ...)
 if ($do_rundir == true) then
    cd ${data_DOUT_S_ROOT}/../run
+   echo ' ' >>& $lists_file
    pwd >>& $lists_file
    echo "Processing "`pwd`" at "`date`
 

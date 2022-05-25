@@ -36,7 +36,7 @@
 #    +  DART output
 #       >  types of state files  
 #             mean, sd  (no instance number)
-#       >  obs_seq.final (no instance number)
+#       x  obs_seq.final (no instance number) These are compressed by diags_rean.csh
 #       >  Note: inflation files are never compressed.
 # 2) Before archiving a restart set to archive/rest; all large restart files.
 # ------------------------------------------------------------------------------

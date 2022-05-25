@@ -92,7 +92,7 @@ else if ($?PBS_NODEFILE) then
    # before and after cheyenne July down time.
    # Mick says the old MPT, which was used to build and run the old filter,
    # was mpt/2.21.
-   # 2021-2-9; We're using a new filter built with system defaults, so don't swap modules.
+   # 2022-2-9; We're using a new filter built with system defaults, so don't swap modules.
    # module swap mpt/2.21
    echo "Modules used for this assimilation:"
    module list
@@ -183,7 +183,8 @@ if (! -d ${archive}/esp/hist) mkdir -p ${archive}/esp/hist
 setenv save_stages_freq RESTART_TIMES
 
 # This next line ultimately specifies the location of the observation files.
-set BASEOBSDIR = /glade/p/cisl/dares/Observations/NCEP+ACARS+GPS+AIRS/Thinned_x9x10
+# set BASEOBSDIR = /glade/p/cisl/dares/Observations/NCEP+ACARS+GPS+AIRS/Thinned_x9x10
+set BASEOBSDIR = /glade/p/cisl/dares/Observations/NCEP+ACARS+GPS+AIRS/ThinAIRS_9x10-C2+C1
 
 # suppress "rm" warnings if wildcard does not match anything
 set nonomatch
@@ -1007,7 +1008,7 @@ if ($cycle == $DATA_ASSIMILATION_CYCLES) then
 
       if ($save_all_inf =~ TRUE) then
          # Put the previous and current inflation restarts in the archive directory.
-         # (to protect last from st_archive putting them in exp/hist)
+         # (to protect last from st_archive putting them in esp/hist)
          # 2020-1-18; Changed dir esp/rest -> esp/hist (one that exists!)  
          # while fixing wayward {mean,sd} files including inflation.
          ${MOVE}   ${CASE}*${stages_except_output}*inf*  ${archive}/esp/hist
