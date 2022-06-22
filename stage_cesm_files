@@ -11,7 +11,7 @@
 #  2) be sure 'restart_time' is set to the day and time from which you want to
 #     restart, if not the initial time.
 
-set restart_time = 2020-01-01-00000
+set restart_time = 2020-04-01-00000
 
 # ---------------------------------------------------------
 # Get the settings for this case from the CESM environment
@@ -76,7 +76,8 @@ if ( ${CONTINUE_RUN} =~ TRUE ) then
 
       endif
 
-      /usr/bin/cp --preserve=timestamps ${RESTARTDIR}/* . || exit 101
+      /usr/bin/cp  ${RESTARTDIR}/* . || exit 101
+      # --preserve=timestamps makes finding the right inflation files less robust
 
    else
 
@@ -162,15 +163,23 @@ else     # CONTINUE_RUN == FALSE
 
 endif
 
-ls *inf*${restart_time}* >& /dev/null
-if ($status == 0) then 
-   echo "The inflation files were found.  They will be linked to generic names by assimilte.csh"
-else
+set inf_file = `ls -rt1 *output_priorinf_mean* | tail -n 1 `
+# ls *inf*${restart_time}* >& /dev/null
+if ($inf_file == '') then 
    echo ""
    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
    echo "WARNING:  no inflation files were found for $restart_time"
    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
    echo ""
+else
+   set inf_time = $inf_file:r:e
+   if ($inf_time !~ $restart_time) then
+      echo "ERROR: the most recent inflation files ($inf_time) "
+      echo "       do not match the restart time ($restart_time)"
+      exit 200
+   else
+      echo "The inflation files were found.  They will be linked to generic names by assimilate.csh"
+   endif
 endif
 
 exit 0

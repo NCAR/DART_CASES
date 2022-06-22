@@ -72,7 +72,9 @@
 # For rest: 80 + 1       = 81 / 36 = 3
 # For obs space: 1       =  1  (tar of obs_seq_finals is now done before this script)
 #PBS  -l select=3:ncpus=36:mpiprocs=36
-#PBS  -l walltime=04:20:00
+# Decompressing each forcing set takes ~8 seconds; x 124 *5 = ~5000 s for a month
+#    Then the ncrcatting happens.
+#PBS  -l walltime=06:00:00
 # Can only make output consistent with SLURM (2011-2019 files)
 # by copying the eo file to a new name at the end.
 #PBS  -o repack_st_arch.eo
@@ -140,6 +142,8 @@ endif
 # These can be turned off by editing or argument(s).
 # do_forcing can only be turned off if archive/cpl/hist/cmds_template exists,
 #    or do_history is also turned off.
+# The project space directories are only created if at least one of
+#     forcing, obs_space, or history is turned on.
 # Number of tasks required by each section (set according to the max of the 'true's)
 # do_forcing     => (nens +1) * 5
 # do_restarts    => nens + 1
@@ -161,15 +165,15 @@ set line = `gladequota | grep -m 1 scratch || exit 1 `
 set pr_used = `echo $line[2] | cut -d'.' -f1`
 # Round it up to be safe.
 @ pr_used++
-if (do_forcing == 'true') then
+if ($do_forcing == 'true') then
    @ pr_need = $pr_used + 2
-   if ($pr_need > 20) then
+   if ($pr_need > 24) then
       echo "ERROR; not enough project space to run this"
       exit 2
    endif
 else if ($do_history == 'true') then
    @ pr_need = $pr_used + 3
-   if ($pr_need > 20) then
+   if ($pr_need > 24) then
       echo "ERROR; not enough project space to run this"
       exit 3
    endif
@@ -257,7 +261,10 @@ if ($do_forcing == true) then
    cd ${data_DOUT_S_ROOT}/cpl/hist
 
    # Make a list of the dates (buried in file names).
-   set files_dates = `ls ${data_CASE}.cpl_0001.ha2x1d.${yr_mo}-*.nc*`
+   # ha2x1hi is the last in the list, so test its compression.
+   # If the decompression failed part way through the file types,
+   # be careful to figure out which types and times still need to be decompressed.
+   set files_dates = `ls ${data_CASE}.cpl_0001.ha2x1hi.${yr_mo}-*.nc*`
    if ($#files_dates == 0) then
       echo "ERROR: there are no ${data_CASE}.cpl_0001.ha2x1d files.  Set do_forcing = false?"
       exit 23
@@ -267,6 +274,8 @@ if ($do_forcing == true) then
       if ($d:e == 'gz') then
          set ymds = $d:r:r:e
          # and for each cpl hist file type, due to the ncpus limit of 144.
+	 # ? >>>  Actually, can all the dates for one type be done by a call to compress.csh?
+         #   NO; each of these is decompressing an ensemble.
          set cstat = 0
          ${data_CASEROOT}/compress.csh gunzip $ymds "hist" "ha2x1d"  || set cstat = $status
          ${data_CASEROOT}/compress.csh gunzip $ymds "hist" "hr2x"    || set cstat = $status
@@ -354,14 +363,14 @@ if ($do_forcing == true) then
          # grep failure = ncrcat success = "not 0"
          set ncrcat_failed = $status
       else
-         # No eo files = failure of something besides g(un)zip.
+         # No eo files = failure of something besides ncrcat.
          echo "cmdfile created no log files for forcing files "
          echo "   and mpi_status of ncrcats = $mpi_status"
          set ncrcat_failed = 0
       endif
    
       if ($mpi_status == 0 && $ncrcat_failed != 0) then
-         rm mycmdfile *.eo $inst_dir:h/*/Previous/*
+         rm mycmdfile *.eo $inst_dir:h/*/Previous/*.${type}.*
       else
          echo "ERROR in repackaging $type forcing (cpl history) files: See h\*.eo, cmds_template, mycmdfile"
          echo '      grep ncrcat *.eo  yielded status '$ncrcat_failed
@@ -433,7 +442,7 @@ if ($do_restarts == true) then
       if ($pre_clean == true) then
          set pre_clean = false
 
-         # `gci cput` moves everything in a directory to campaign storage.
+         # `gci cput -r` moves everything in a directory to campaign storage.
          # Clean up and/or make a new directory for the repackaged files 
          # and feed that directory to `gci cput`.
    
@@ -637,6 +646,7 @@ if ($do_obs_space == true) then
       exit 90
    endif
 
+   # THIS IS DONE BY repack_project.csh
    # Now obs space files are in a place where `gci cput` can handle them.
    # Echo the archive command to help with globus error recovery
    # and make it easier to do that on cheyenne as well as on casper.
@@ -708,6 +718,7 @@ if ($do_history == true) then
                ls Previous/${data_CASE}.$models[$m]_${INST}.*.${data_year}.nc >& /dev/null
                set ls_status = $status
                if ($ls_status != 0 && $data_month != 1) then
+
                   # Exit because if $inst_dir exists there should be a yearly file in it.
                   echo "There are no ${data_CASE}.$models[$m]_${INST}."'*'".${data_year}.nc files.  Exiting"
                   exit 95
@@ -755,7 +766,6 @@ if ($do_history == true) then
       set mycmdfile = mycmdfile_$models[$m]
 
       # The number of history files = SUM(data_NINST * hist_types_this_comp * dates_this_type)
-      @ tasks = 0
       @ type = 0
       while ($type < 10)
          if (-f $mycmdfile) mv ${mycmdfile} ${mycmdfile}_prev
@@ -808,7 +818,7 @@ if ($do_history == true) then
             endif
          
             if ($mpi_status == 0 && $ncrcat_failed != 0) then
-               rm ${mycmdfile} *.eo $inst_dir:h/*/Previous/*
+               rm ${mycmdfile} *.eo $inst_dir:h/*/Previous/*.h${type}.*
             else
                echo "ERROR in repackaging history files: See $components[$m]/hist/"\
                     'h*.eo, cmds_template*, mycmdfile*'
@@ -910,7 +920,7 @@ if ($do_state_space == true) then
    
    set files = `ls ${data_CASE}.cam_0001.e.$stages_all[1].${yr_mo}*`
    echo "Files from which atm $stages_all[1] allinst dates will be gathered:"
-   echo "  $files"
+   echo "  $files" | sed -e "s# #\n#g"
    if ($#files == 0) then
       echo "There are no .e.$stages_all[1].${yr_mo} files in atm/hist.  Continuing."
    else
@@ -959,7 +969,6 @@ if ($do_state_space == true) then
       else
          # No eo files = failure of something besides tar.
          set ncrcat_failed = 0
-         echo "Restart file set, tar mpi_status = $mpi_status"
       endif
    
       if ($mpi_status == 0 && $ncrcat_failed != 0) then
@@ -1006,7 +1015,7 @@ if ($do_state_space == true) then
    endif
 
    echo "Archiving "
-   echo $list
+   echo $list | sed -e "s# #\n#g"
 
    if (! -d $yr_mo) mkdir $yr_mo
    tar -z -c -f ${yr_mo}/da.log.${yr_mo}.tar $list
@@ -1015,7 +1024,7 @@ if ($do_state_space == true) then
       # Echo the archive command to help with globus error recovery
       # and make it easier to do that on cheyenne as well as on casper.
       echo "gci cput -r ${data_DOUT_S_ROOT}/logs/${yr_mo}: "
-      echo "${data_campaign}/${data_CASE}/logs/$yr_mo >&! gci_logs_${yr_mo}.log"
+      echo "    ${data_campaign}/${data_CASE}/logs/$yr_mo >&! gci_logs_${yr_mo}.log"
       gci cput -r ${data_DOUT_S_ROOT}/logs/${yr_mo}:${data_campaign}/${data_CASE}/logs/$yr_mo \
           >&! gci_logs_${yr_mo}.log
    else
@@ -1032,7 +1041,7 @@ cd $data_CASEROOT
 if ($?PBS_JOBID) then
    echo "PBS_JOBNAME = $PBS_JOBNAME"
    if (-f $PBS_JOBNAME:r.eo) then
-      cp $PBS_JOBNAME:r.eo $PBS_JOBNAME:r_${yr_mo}.eo
+      mv $PBS_JOBNAME:r.eo $PBS_JOBNAME:r_${yr_mo}.eo
    else
       echo "$PBS_JOBNAME:r.eo does not exist, despite PBS -k eod"
    endif

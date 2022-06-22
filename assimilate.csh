@@ -400,7 +400,7 @@ if ($#log_list >= 3) then
    set save_rest_freq = Monday
    
    set purge = 'true'
-   # Learn whether save_rest_freq a string or a number.
+   # Learn whether save_rest_freq is a string or a number.
    # Character strings must be tested outside of the 'if' statement.
    echo $save_rest_freq | grep '[a-z]'
    if ($status == 0) then

@@ -26,7 +26,7 @@
 #-----------------------------------------
 #PBS  -N compress.csh
 #PBS  -A P86850054
-#PBS  -q economy
+#PBS  -q regular
 # For hist: 5 * 80         = 400 / 36 = 12
 # For dart: 1 + 2*(2 + 80) = 165 / 36 =  5 
 # For rest: 4 * 80         = 320 / 36 =  9
@@ -49,11 +49,11 @@ if (! -f data_scripts.csh) then
 endif
 source data_scripts.csh
 
-set comp_cmd      = 'gunzip '
+set comp_cmd      = 'gzip '
 # set comp_cmd      = 'gzip -k'
 # set comp_cmd      = 'gzip -k --stdout'
-set ymds          = 2019-12-30-00000
-set data_dir      = ${data_DOUT_S_ROOT}/rest/${ymds}
+set ymds          = 2020-03-01-00000
+set data_dir      = ${data_DOUT_S_ROOT}/rest/Keep_${ymds}
 
 # set sets          = (cpl)
 # Restarts

@@ -23,8 +23,6 @@
 # >>> From a casper window (but not 'ssh'ed to data-access.ucar.edu)
 #     submit this script from the CESM CASEROOT directory. <<<
 
-# > > > WARNING; cheyenne compute nodes do not have access to Campaign Storage. < < < 
-#       Run this on casper.
 
 #==========================================================================
 
@@ -72,11 +70,10 @@ else if ($?PBS_O_WORKDIR) then
    env | sort | grep PBS
 endif
 
-# Needed for globus+ncar_py (but only in mv_to_campaign.csh?)
-module load nco gnu 
-
-# Must run on casper, which only has mpirun
-# # Needed for mpiexec_mpt:  
+# Needed for globus+ncar_py (but only in mv_to_campaign.csh?), but not for gci.
+# module load nco gnu 
+ 
+# Needed for mpiexec_mpt:  
 # setenv MPI_SHEPHERD true
 
 setenv date_rfc 'date --rfc-3339=ns'
@@ -124,10 +121,8 @@ if ($#argv != 0) then
    # Request for help; any argument will do.
    echo "Usage:  "
    echo "Before running this script"
-   echo "    Run repack_st_archive.csh. "
-   echo "    Log in to globus (see mv_to_campaign.csh for instructions)."
+   echo "    Run repack_st_archive.csh for all the months to be archived. "
    echo "Batch job"
-   echo "    From a casper window (but not 'ssh'ed to data-access.ucar.edu)"
    echo "    submit this script from the CESM CASEROOT directory. "
 #    echo "Call by user or script:"
 #    echo "   repack_project.csh project_dir campaign_dir [do_this=false] ... "
@@ -151,19 +146,20 @@ endif
 
 echo "------------------------"
 if ($do_obs_space == true) then
-   cd ${data_proj_space}/${data_CASE}/esp/hist
+   cd ${data_proj_space}/esp/hist
    echo " "
    echo "Location for obs space is `pwd`"
 
    # Obs space files are already compressed.
 
-   # mv_to_campaign.csh uses 'transfer --sync_level mtime'
+   # `gci cput` uses 'transfer --sync_level mtime'
    # so the whole esp/hist directory can be specified,
    # but only the files which are newer than the CS versions will be transferred.
 
-   ${data_CASEROOT}/mv_to_campaign.csh \
-      $data_year ${data_proj_space}/${data_CASE}/esp/hist/ \
-      ${data_campaign}/${data_CASE}/esp/hist
+   echo "gci cput -r ${data_proj_space}/esp/hist/: "
+   echo "    ${data_campaign}/${data_CASE}/esp/hist >&! gci_esp.log"
+   gci cput -r ${data_proj_space}/esp/hist/:${data_campaign}/${data_CASE}/esp/hist \
+       >&! gci_esp.log
 
    # If this is successful, it is safe to remove the original obs_seq_final files
    # from $DOUT_S_ROOT/esp/hist, since there will be tarred versions on $project
@@ -172,7 +168,7 @@ if ($do_obs_space == true) then
    
 endif
 
-cd ${data_proj_space}/${data_CASE}
+cd ${data_proj_space}
 
 #--------------------------------------------
 
@@ -190,11 +186,10 @@ if ($do_history == true) then
          continue
       endif 
 
-      cd ${data_proj_space}/${data_CASE}/$components[$m]/hist
+      cd ${data_proj_space}/$components[$m]/hist
 
       echo "============================"
       echo "Location for history is `pwd`"
-
 
       if ($components[$m] == 'cpl') then
          set types = ( ha2x1d hr2x ha2x3h ha2x1h ha2x1hi )
@@ -286,14 +281,15 @@ if ($do_history == true) then
          @ t++
       end
 
-      echo "   Calling mv_to_campaign.csh to copy compressed files"
-      ${data_CASEROOT}/mv_to_campaign.csh \
-         $data_year ${data_proj_space}/${data_CASE}/$components[$m]/hist/  \
-         ${data_campaign}/${data_CASE}/$components[$m]/hist
-      echo "   Done with mv_to_campaign.csh"
+      set comp = ${data_CASE}/$components[$m]/hist
+      echo "gci cput -r ${data_proj_space}/${comp}/: "
+      echo "    ${data_campaign}/$comp >&! gci_$components[$m].log"
+      gci cput -r ${data_proj_space}/$comp/:${data_campaign}/$comp \
+          >&! gci_$components[$m].log
+      echo "   Done with `gci cput`"
       echo " "
  
-      cd ${data_proj_space}/${data_CASE}
+      cd ${data_proj_space}
 
       @ m++
    end

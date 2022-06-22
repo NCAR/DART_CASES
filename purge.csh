@@ -33,7 +33,7 @@ $MYNAME will not allow the current month to be purged.
 Before running $MYNAME with the [remove] option ...
  1) Run repack_st_archive.csh
  2) Confirm all the output is where it belongs using pre_purge_check.csh
- 3) Run $MYNAME with no arguments to generate a list of files that will
+ 3) Run $MYNAME with the YYYY-MM argument to generate a list of files that will
     be removed.
  4) If necessary, edit $MYNAME to change the 
     file types and model/components that will be purged
@@ -254,7 +254,8 @@ if ($do_state_space == true) then
    echo ' ' >>& $lists_file
    pwd                                 >>& $lists_file
    ${RECURSIVE_ACTION} $yr_mo          >>& $lists_file
-   ${RECURSIVE_ACTION} *.h0.*$yr_mo*   >>& $lists_file
+# Redundant with component/hist lists, below
+#   ${RECURSIVE_ACTION} *.h0.*$yr_mo*   >>& $lists_file
    
    # Archive DART log files (and others?)
 
