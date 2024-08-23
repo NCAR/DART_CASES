@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<file id="stream" version="1.0">
+<dataSource>
+   GENERIC
+</dataSource>
+<domainInfo>
+  <variableNames>
+     time    time
+        xc      lon
+        yc      lat
+        area    area
+        mask    mask
+  </variableNames>
+  <filePath>
+     /glade/work/raeder/Models/CAM_init/SST_ssh
+  </filePath>
+  <fileNames>
+     domain.ocn.d025.120821.nc
+  </fileNames>
+</domainInfo>
+<fieldInfo>
+   <variableNames>
+     SST_cpl t
+   </variableNames>
+   <filePath>
+     /glade/work/raeder/Models/CAM_init/SST_ssh
+   </filePath>
+   <fileNames>
+    avhrr-only-v2.2011-202001_0Z_filled_c200810.nc
+   </fileNames>
+   <offset>
+      43200
+   </offset>
+</fieldInfo>
+</file>

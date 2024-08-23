@@ -1,0 +1,13 @@
+&modelio
+  diri = "/glade/derecho/scratch/raeder/OSSE_QCEFF3mem/bld/esp"
+  diro = "/glade/derecho/scratch/raeder/OSSE_QCEFF3mem/run"
+  logfile = "esp_0001.log.240822-204759"
+/
+&pio_inparm
+  pio_netcdf_format = ""
+  pio_numiotasks = -99
+  pio_rearranger = -99
+  pio_root = -99
+  pio_stride = -99
+  pio_typename = "nothing"
+/

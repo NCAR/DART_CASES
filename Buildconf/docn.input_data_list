@@ -1,0 +1,3 @@
+domain1 = /glade/work/raeder/Models/CAM_init/SST_ssh/domain.ocn.d025.120821.nc
+file1 = /glade/work/raeder/Models/CAM_init/SST_ssh/avhrr-only-v2.2011-202001_0Z_filled_c200810.nc
+domainfile = /glade/work/raeder/Models/cesm1_4_beta06/cime/tools/mapping/gen_domain_files/domain.ocn.d.25x.25.150824.nc
