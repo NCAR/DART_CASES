@@ -1,7 +1,7 @@
 &modelio
   diri = "/glade/derecho/scratch/raeder/OSSE_BNRH_all2/bld/iac"
   diro = "/glade/derecho/scratch/raeder/OSSE_BNRH_all2/run"
-  logfile = "iac_0002.log.240828-070104"
+  logfile = "iac_0002.log.240828-072549"
 /
 &pio_inparm
   pio_netcdf_format = "64bit_offset"

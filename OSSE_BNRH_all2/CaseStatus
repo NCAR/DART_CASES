@@ -90,3 +90,17 @@
  ---------------------------------------------------
 2024-08-28 07:12:37: case.build success 
  ---------------------------------------------------
+2024-08-28 07:24:10: xmlchange success <command> ./xmlchange DOUT_S=FALSE  </command>
+ ---------------------------------------------------
+2024-08-28 07:24:11: xmlchange success <command> ./xmlchange DATA_ASSIMILATION_CYCLES=1,RESUBMIT=0  </command>
+ ---------------------------------------------------
+2024-08-28 07:24:11: xmlchange success <command> ./xmlchange --subgroup case.run --id JOB_WALLCLOCK_TIME --val 00:18:00  </command>
+ ---------------------------------------------------
+2024-08-28 07:24:12: xmlchange success <command> ./xmlchange --subgroup case.run --id USER_REQUESTED_WALLTIME --val 00:18  </command>
+ ---------------------------------------------------
+2024-08-28 07:24:12: xmlchange success <command> ./xmlchange -f --subgroup case.run --id JOB_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-08-28 07:24:12: xmlchange success <command> ./xmlchange -f --subgroup case.run --id USER_REQUESTED_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-08-28 07:24:13: xmlchange success <command> ./xmlchange --id JOB_PRIORITY --val economy  </command>
+ ---------------------------------------------------
