@@ -1,0 +1,190 @@
+#!/bin/csh -f
+# This script can be used to help restart an experiment from any previous step.
+# The appropriate files are copied to the RUN directory.
+#
+# Before running this script:
+#  1) be sure CONTINUE_RUN is set correctly in the env_run.xml file in
+#     your caseroot directory.
+#     CONTINUE_RUN=FALSE => you are starting over at the initial time.
+#     CONTINUE_RUN=TRUE  => you are starting from a previous step but not
+#                           the very first one.
+#  2) be sure 'restart_time' is set to the day and time from which you want to
+#     restart, if not the initial time.
+
+set restart_time = 2018-01-01-00000
+
+# ---------------------------------------------------------
+# Get the settings for this case from the CESM environment
+# ---------------------------------------------------------
+cd /glade/work/raeder/Exp/OSSE_BNRH_all2_git/OSSE_BNRH_all2
+setenv RUNDIR       `./xmlquery RUNDIR       --value`
+setenv CONTINUE_RUN `./xmlquery CONTINUE_RUN --value`
+
+ls $RUNDIR/*.i.${restart_time}.nc
+if ($status == 0) then
+   # The restart set exists in the RUNDIR, regardless of the short term archiver.
+   setenv DOUT_S FALSE
+else
+   set hide_loc = `ls $RUNDIR:h/Hide*/*_0001.i.${restart_time}.nc`
+   if ($status == 0) then
+      # The restart set exists in a Hide directory, regardless of the short term archiver.
+      setenv DOUT_S FALSE
+      mv $hide_loc:h/* ${RUNDIR}
+   else
+      setenv DOUT_S       `./xmlquery DOUT_S       --value`
+      setenv DOUT_S_ROOT  `./xmlquery DOUT_S_ROOT  --value`
+   endif
+endif
+
+# ---------------------------------------------------------
+
+cd ${RUNDIR}
+
+echo 'Copying the required CESM files to the run directory to rerun a previous step. '
+echo 'CONTINUE_RUN from env_run.xml is' ${CONTINUE_RUN}
+if ( ${CONTINUE_RUN} =~ TRUE ) then
+   echo 'so files for some later step than the initial one will be restaged.'
+   echo "Date to reset files to is: ${restart_time}"
+else
+   echo 'so files for the initial step of this experiment will be restaged.'
+   echo "Date to reset files to is: 2018-01-01-00000"
+endif
+echo ''
+
+if ( ${CONTINUE_RUN} =~ TRUE ) then
+
+   #----------------------------------------------------------------------
+   # This block copies over a set of restart files from any previous step of
+   # the experiment that is NOT the initial step.
+   # After running this script resubmit the job to rerun.
+   #----------------------------------------------------------------------
+
+   echo "Staging restart files for run date/time: " ${restart_time}
+
+   if (  ${DOUT_S} =~ TRUE ) then
+
+      # The restarts should be in the short term archive 'rest' restart directories.
+
+      set RESTARTDIR = ${DOUT_S_ROOT}/rest/${restart_time}
+
+      if ( ! -d ${RESTARTDIR} ) then
+
+         echo "restart file directory not found: "
+         echo " ${RESTARTDIR}"
+         exit 100
+
+      endif
+
+      /usr/bin/cp --preserve=timestamps ${RESTARTDIR}/* . || exit 101
+
+   else
+
+      # The short term archiver is off, which leaves all the restart files
+      # in the run directory.  The rpointer files must still be updated to
+      # point to the files with the right day/time.
+
+      @ inst=1
+      while ($inst <= 80)
+
+         set inst_string = `printf _%04d $inst`
+
+         echo "OSSE_BNRH_all2.clm2${inst_string}.r.${restart_time}.nc" >! rpointer.lnd${inst_string}
+         echo "OSSE_BNRH_all2.cice${inst_string}.r.${restart_time}.nc" >! rpointer.ice${inst_string}
+         echo "OSSE_BNRH_all2.cam${inst_string}.r.${restart_time}.nc"  >! rpointer.atm${inst_string}
+         if (mosart == 'rtm') then
+            echo "OSSE_BNRH_all2.rtm${inst_string}.r.${restart_time}.nc"  >! rpointer.rof${inst_string}
+         else if (mosart == 'mosart') then
+            echo "OSSE_BNRH_all2.mosart${inst_string}.r.${restart_time}.nc"  >! rpointer.rof${inst_string}
+         endif
+         if (80 > 1) then
+            echo "OSSE_BNRH_all2.cpl${inst_string}.r.${restart_time}.nc"     >! rpointer.drv${inst_string}
+            echo "OSSE_BNRH_all2.docn${inst_string}.r.${restart_time}.nc"    >! rpointer.ocn${inst_string}
+            echo "OSSE_BNRH_all2.docn${inst_string}.rs1.${restart_time}.bin" >> rpointer.ocn${inst_string}
+         endif
+
+         @ inst ++
+      end
+
+      # There are no instance numbers in these filenames.
+      if (80 == 1) then
+         echo "OSSE_BNRH_all2.cpl.r.${restart_time}.nc"     >! rpointer.drv
+         echo "OSSE_BNRH_all2.docn.r.${restart_time}.nc"    >! rpointer.ocn
+         echo "OSSE_BNRH_all2.docn.rs1.${restart_time}.bin" >> rpointer.ocn
+      endif
+
+   endif
+
+   # Relink the CAM initial files back to the hardwired names set in the namelist
+
+   @ inst=1
+   while ($inst <= 80)
+      set inst_string = `printf _%04d $inst`
+      /usr/bin/ln -s -f OSSE_BNRH_all2.cam${inst_string}.i.${restart_time}.nc cam_initial${inst_string}.nc
+      @ inst ++
+   end
+
+   echo "All files reset to rerun experiment step using (ref)time " $restart_time
+
+else     # CONTINUE_RUN == FALSE
+
+   #----------------------------------------------------------------------
+   # This block links the right files to rerun the initial (very first)
+   # step of an experiment.  The names and locations are set during the
+   # building of the case; to change them rebuild the case.
+   # After running this script resubmit the job to rerun.
+   #----------------------------------------------------------------------
+
+   echo ' '
+
+   # If filter will create an ensemble from a single state,
+   #    filter_nml: perturb_from_single_instance = .true.
+   # It's most reliable to make all of the CAMs start with the chosen truth file.
+   # Then the correct base state will be provided to filter, around which perts will be made.
+   set line = `grep "^[ ]*perturb_from_single_instance[ ]*=" \
+               /glade/work/raeder/Exp/OSSE_BNRH_all2_git/OSSE_BNRH_all2/input.nml | sed -e "s#[=,'\.]# #g"`
+   set pert = $line[2] 
+   echo "pert = $pert"
+
+   @ inst=1
+   while ($inst <= 80)
+
+      echo "Staging initial files for instance $inst of 80"
+
+      # The local file (link).
+      set inst_string = `printf _%04d $inst`
+      # The reference file. 
+      set pert_string = $inst_string
+      if ($pert == 'true') set pert_string = `printf _%04d 7`
+
+      /usr/bin/ln -s -f /glade/derecho/scratch/raeder/Z_OSSE_Trop_UV2-5000Pa/archive/rest/2018-01-01-00000/Z_OSSE_Trop_UV2-5000Pa.clm2${pert_string}.r.2018-01-01-00000.nc  \
+                           ./Z_OSSE_Trop_UV2-5000Pa.clm2${inst_string}.r.2018-01-01-00000.nc
+      /usr/bin/ln -s -f /glade/derecho/scratch/raeder/Z_OSSE_Trop_UV2-5000Pa/archive/rest/2018-01-01-00000/Z_OSSE_Trop_UV2-5000Pa.cice${pert_string}.r.2018-01-01-00000.nc  \
+                           ./Z_OSSE_Trop_UV2-5000Pa.cice${inst_string}.r.2018-01-01-00000.nc
+      /usr/bin/ln -s -f /glade/derecho/scratch/raeder/Z_OSSE_Trop_UV2-5000Pa/archive/rest/2018-01-01-00000/Z_OSSE_Trop_UV2-5000Pa.cam${pert_string}.i.2018-01-01-00000.nc   \
+                                cam_initial${inst_string}.nc
+      if (mosart == 'rtm') then
+         /usr/bin/ln -s -f /glade/derecho/scratch/raeder/Z_OSSE_Trop_UV2-5000Pa/archive/rest/2018-01-01-00000/Z_OSSE_Trop_UV2-5000Pa.rtm${pert_string}.r.2018-01-01-00000.nc \
+                              ./Z_OSSE_Trop_UV2-5000Pa.rtm${inst_string}.r.2018-01-01-00000.nc
+      else if (mosart == 'mosart') then
+         /usr/bin/ln -s -f /glade/derecho/scratch/raeder/Z_OSSE_Trop_UV2-5000Pa/archive/rest/2018-01-01-00000/Z_OSSE_Trop_UV2-5000Pa.mosart${pert_string}.r.2018-01-01-00000.nc \
+                              ./Z_OSSE_Trop_UV2-5000Pa.mosart${inst_string}.r.2018-01-01-00000.nc
+      endif
+
+      @ inst ++
+   end
+
+   echo "All files set to run the FIRST experiment step using (ref)time" 2018-01-01-00000
+
+endif
+
+ls *inf*${restart_time}* >& /dev/null
+if (0 != 0) then 
+   echo ""
+   echo "================================="
+   echo "WARNING:  no inflation files were found for $restart_time"
+   echo "================================="
+   echo ""
+endif
+
+exit 0
+

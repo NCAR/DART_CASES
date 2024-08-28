@@ -1,0 +1,13 @@
+&modelio
+  diri = "/glade/derecho/scratch/raeder/OSSE_BNRH_all2/bld/wav"
+  diro = "/glade/derecho/scratch/raeder/OSSE_BNRH_all2/run"
+  logfile = "wav_0001.log.240828-070104"
+/
+&pio_inparm
+  pio_netcdf_format = "64bit_offset"
+  pio_numiotasks = -99
+  pio_rearranger = 2
+  pio_root = 1
+  pio_stride = 128
+  pio_typename = "pnetcdf"
+/
