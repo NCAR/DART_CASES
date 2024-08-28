@@ -63,18 +63,24 @@ if (-f ${data_scratch}/run/rpointer.atm_0001) then
    if ($status != 0) then
 #     $first_date != $last_date && 
 # ?   This relies on stage_cesm_files.template, which is currently NOT made by setup_advanced.
-      sed -e "s#NO-DATE-YET#$first_date#" stage_cesm_files.template >! stage_cesm_files
-      if ($status != 0) then
-         echo "ERROR: rpointer.atm_0001 has the wrong date, but creating stage_cesm_files failed"
-         exit 30
-      endif
-      echo "Running stage_cesm_files for $first_date"
-      chmod 755 stage_cesm_files
-      ./stage_cesm_files
-      if ($status != 0) then
-         echo "ERROR: stage_cesm_files failed."
-         echo "       Check: restart_date, DOUT_S, CONTINUE_RUN, ..."
-         exit 40
+      if (-f stage_cesm_files.template) then
+         sed -e "s#NO-DATE-YET#$first_date#" stage_cesm_files.template >! stage_cesm_files
+         if ($status != 0) then
+            echo "ERROR: rpointer.atm_0001 has the wrong date, but creating stage_cesm_files failed"
+            echo "       first_date = $first_date  data_scratch = $data_scratch"
+            exit 30
+         endif
+         echo "Running stage_cesm_files for $first_date"
+         chmod 755 stage_cesm_files
+         ./stage_cesm_files
+         if ($status != 0) then
+            echo "ERROR: stage_cesm_files failed."
+            echo "       Check: restart_date, DOUT_S, CONTINUE_RUN, ..."
+            exit 33
+         endif
+      else
+         echo "ERRORS: no stage_cesm_files.template to fix inconsistency in rpointer.atm_0001"
+         exit 36
       endif
    endif
 endif
@@ -155,7 +161,7 @@ echo "$cycles cycles will be distributed among $resubmissions +1 jobs"
 # @ job_minutes = 10 + ( $cycles_per_job * ( 10 + (( $cycles_per_job * 10) / 70 )))
 # 12 hours: @ job_minutes = 720
 
-@ job_minutes = ( $cycles_per_job * 7 ) + 10 
+@ job_minutes = ( $cycles_per_job * 8 ) + 10 
 # @ job_minutes = 12 * 60
 if ($job_minutes > 720) set job_minutes = 720
 @ wall_hours  = $job_minutes / 60
@@ -174,7 +180,15 @@ endif
 
 ./xmlchange --subgroup case.run --id JOB_WALLCLOCK_TIME      --val ${wall_time}:00
 ./xmlchange --subgroup case.run --id USER_REQUESTED_WALLTIME --val ${wall_time}
-./xmlchange --id JOB_PRIORITY            --val $queue
+if ($queue == 'preempt') then
+   # This CIME doesn't recognize preempt, so -force it to accept the value.
+   ./xmlchange -f --subgroup case.run --id JOB_QUEUE            --val $queue
+   ./xmlchange -f --subgroup case.run --id USER_REQUESTED_QUEUE --val $queue
+else
+   ./xmlchange -f --subgroup case.run --id JOB_QUEUE            --val main
+   ./xmlchange -f --subgroup case.run --id USER_REQUESTED_QUEUE --val main
+   ./xmlchange                        --id JOB_PRIORITY         --val $queue
+endif
 # Cheyenne: 
 # ./xmlchange --subgroup case.run --id JOB_QUEUE            --val $queue
 # ./xmlchange --subgroup case.run --id USER_REQUESTED_QUEUE --val $queue
@@ -182,7 +196,7 @@ endif
 # Choose a version of case_run.py to use; with(out) a CAM run.
 cd ${data_CESM_python}/case
 if (-l case_run.py) then
-   rm case_run.py
+   rm case_run.py  
 else
    echo 'ERROR: case_run.py is not a link.  Make it one'
    exit 100
@@ -200,7 +214,8 @@ if ("$first_date" == "$last_date" ) then
    endif
 else
    # Hindcast + assimilation; link the right version to the expected name.
-   ln -s case_run_cam+assim.py case_run.py
+   # ln -s case_run_cam+assim.py case_run.py
+   ln -s case_run_cam+assim+preempt.py case_run.py
 endif   
 echo "case_run.py is linked to"
 ls -l case_run.py
@@ -224,6 +239,17 @@ ls -l case_run.pyc */case_run*pyc
 
 cd -
 
+cd ${data_CESM_python}
+if (-l utils.py) then
+   rm ../utils.py
+else
+   echo 'ERROR: utils.py is not a link.  Make it one'
+   exit 100
+endif
+ln -s ../utils.py.debug_preempt    ../utils.py
+python -m py_compile utils.py 
+cd -
+
 # Generate the namelists that will be used for the model advance and should
 # be version-controlled. Also generates metadata that needs post-processing
 # before being version-controlled.
@@ -236,7 +262,13 @@ cd -
 # running preview_namelists for each of the DATA_ASSIMILATION_CYCLES,
 # which is a colossal waste of time.
 
-./preview_namelists | sed -e 's#->#\n     ->#'
+# Ha.ha.ha -e (aka no -E) requires a \ before the +.  -E cannot have it.
+echo "preview_namelists >! prev_nlists"
+./preview_namelists | \
+  grep -v -E -e 'copying.+modelio.+00[0-9][02-9]'  \
+             -e 'copying.+streams.+00[0-9][02-9]'  \
+             -e 'copying.+00[0-9][02-9].+CaseDocs' \
+  | sed -e 's#->#\n     ->#' >! prev_nlists
 
 echo "Creating Buildconf/[cam,clm].input_data_list.sorted files."
 
@@ -255,7 +287,14 @@ echo '   % git push origin '$data_CASEROOT:t
 echo "   On github...kdraeder/DART_CASES issue the pull request."
 # Echo the submit command, without generating new ${comp}_in_#### files.
 echo "After approval, submit the job using"
-echo './case.submit -M begin,end --skip-preview-namelist'
+echo "./case.submit -M begin,end --skip-preview-namelist -a ' -a' [DD]HHMM"
+echo '   -a Optional args to specify the earliest start time (24 hour clock); '
+echo '      Useful with preempt to prevent starting during busy periods'
+# 2024-8-6
+# I had to edit $m58/cime/scripts/lib/CIME/XML/env_batch.py to make it accept
+# a "list" of arguments provided after the -a.
+# I also modified cime/Tools/case.submit to add  nargs=2, to the parser.add_argument command.
+# This seems like bad hard-wiring, but I don't have the python chops to do it right.
 
 exit 0
 
