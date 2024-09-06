@@ -1,0 +1,14 @@
+&drydep_inparm
+/
+&megan_emis_nl
+/
+&fire_emis_nl
+/
+&carma_inparm
+/
+!#--------------------------------------------------------------------------------------------------------------------------
+!# drv_flds_in:: Comment:
+!# This namelist was created using the following command-line:
+!#     /glade/work/raeder/Models/cesm2_1_m5.8/components/clm/bld/CLM build-namelist -cimeroot /glade/work/raeder/Models/cesm2_1_m5.8/cime/scripts/Tools/../.. -infile /glade/work/raeder/Exp/Rean_BNRH_all_git/Rean_BNRH_all/Buildconf/clmconf/namelist -csmdata /glade/campaign/cesm/cesmdata/inputdata -inputdata /glade/work/raeder/Exp/Rean_BNRH_all_git/Rean_BNRH_all/Buildconf/clm.input_data_list -ignore_ic_date -namelist &clm_inparm  start_ymd=20191230 /  -no-megan -use_case 20thC_transient -res 0.9x1.25 -clm_start_type branch -envxml_dir /glade/work/raeder/Exp/Rean_BNRH_all_git/Rean_BNRH_all -l_ncpl 48 -lnd_frac /glade/work/raeder/Models/cesm1_4_beta06/cime/tools/mapping/gen_domain_files/domain.lnd.fv0.9x1.25_d.25x.25.150907.nc -glc_nec 10 -co2_ppmv 284.7 -co2_type diagnostic -config /glade/work/raeder/Exp/Rean_BNRH_all_git/Rean_BNRH_all/Buildconf/clmconf/config_cache.xml -bgc bgc -crop -clm_accelerated_spinup off -lnd_tuning_mode clm5_0_cam6.0 -mask d.25x.25
+!# For help on options use: /glade/work/raeder/Models/cesm2_1_m5.8/components/clm/bld/CLM build-namelist -help
+!#--------------------------------------------------------------------------------------------------------------------------

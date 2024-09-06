@@ -1,0 +1,13 @@
+&modelio
+  diri = "/glade/derecho/scratch/raeder/Rean_BNRH_all/bld/cpl"
+  diro = "/glade/derecho/scratch/raeder/Rean_BNRH_all/run"
+  logfile = "cpl_0002.log.240906-173618"
+/
+&pio_inparm
+  pio_netcdf_format = "64bit_offset"
+  pio_numiotasks = -99
+  pio_rearranger = 2
+  pio_root = 1
+  pio_stride = 128
+  pio_typename = "pnetcdf"
+/

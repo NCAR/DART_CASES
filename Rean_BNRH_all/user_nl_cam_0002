@@ -1,0 +1,24 @@
+! Users should add all user specific namelist changes below in the form of 
+! namelist_var = new_namelist_value 
+ 
+ inithist      = 'ENDOFRUN'
+ ncdata        = 'cam_initial_0002.nc'
+ empty_htapes  = .true. 
+ fincl1        = 'PHIS:I' 
+ nhtfrq        = -6 
+ srf_emis_type                 = 'CYCLICAL'
+ srf_emis_cycle_yr             = 2014
+ prescribed_ozone_type         = 'CYCLICAL'
+ prescribed_ozone_cycle_yr     = 2014
+ prescribed_strataero_type     = 'CYCLICAL'
+ prescribed_strataero_cycle_yr = 2014
+  flbc_type = 'SERIAL'
+  flbc_file = '/glade/campaign/cesm/cesmdata/cseg/inputdata/atm/waccm/lb/LBC_2014-2500_CMIP6_SSP370_0p5degLat_GlobAnnAvg_c190301.nc'
+  tracer_cnst_type     = 'INTERP_MISSING_MONTHS'
+  tracer_cnst_datapath = '/glade/campaign/cesm/cesmdata/cseg/inputdata/atm/cam/tracer_cnst'
+  tracer_cnst_file     = 'tracer_cnst_halons_3D_L70_2014-2101_CMIP6-SSP5-8.5_c190307.nc'
+ ext_frc_type      = 'INTERP_MISSING_MONTHS' 
+ ext_frc_specifier = 
+  'H2O    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/elev/H2OemissionCH4oxidationx2_3D_L70_1849-2101_CMIP6ensAvg_SSP3-7.0_c190403.nc' 
+  'num_a1 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_so4_a1_anthro-ene_vertical_mol_175001-210101_0.9x1.25_c20190222.nc' 
+  'so4_a1 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_so4_a1_anthro-ene_vertical_mol_175001-210101_0.9x1.25_c20190222.nc' 
