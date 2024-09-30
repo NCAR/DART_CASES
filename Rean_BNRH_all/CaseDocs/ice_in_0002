@@ -371,7 +371,7 @@
   stream_domtvarname = "time"
   stream_domxvarname = "xc"
   stream_domyvarname = "yc"
-  stream_fldfilename = "/glade/work/raeder/Models/CAM_init/SST_ssh/DEPRECATED/avhrr_v2.1-only-v2.201912-202109_12Z_2019-12-30.nc"
+  stream_fldfilename = "/glade/work/raeder/Models/CAM_init/SST_ssh/DEPRECATED/avhrr_v2.1-only-v2.201912-202109_12Z_filled_c211112.nc"
   stream_fldvarname = "ice_cov"
   stream_mapread = "NOT_SET"
   stream_year_first = 2019

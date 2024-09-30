@@ -214,8 +214,8 @@ if ("$first_date" == "$last_date" ) then
    endif
 else
    # Hindcast + assimilation; link the right version to the expected name.
-   # ln -s case_run_cam+assim.py case_run.py
-   ln -s case_run_cam+assim+preempt.py case_run.py
+   ln -s case_run_cam+assim.py case_run.py
+   # ln -s case_run_cam+assim+preempt.py case_run.py
 endif   
 echo "case_run.py is linked to"
 ls -l case_run.py
@@ -239,17 +239,17 @@ ls -l case_run.pyc */case_run*pyc
 
 cd -
 
-cd ${data_CESM_python}
-if (-l utils.py) then
-   rm ../utils.py
-else
-   echo 'ERROR: utils.py is not a link.  Make it one'
-   exit 100
-endif
-ln -s ../utils.py.default    ../utils.py
-python -m py_compile utils.py 
-cd -
-
+# cd ${data_CESM_python}
+# if (-l utils.py) then
+#    rm ../utils.py
+# else
+#    echo 'ERROR: utils.py is not a link.  Make it one'
+#    exit 100
+# endif
+# ln -s ../utils.py.default    ../utils.py
+# python -m py_compile utils.py 
+# cd -
+# 
 # Generate the namelists that will be used for the model advance and should
 # be version-controlled. Also generates metadata that needs post-processing
 # before being version-controlled.

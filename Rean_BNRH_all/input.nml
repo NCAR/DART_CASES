@@ -34,6 +34,7 @@
 !                             if needed.
 
 &probit_transform_nml
+   fix_bound_violations = .false.
    /
 
 &algorithm_info_nml
@@ -213,9 +214,9 @@
    state_variables  = 'T',     'QTY_TEMPERATURE',         'NA', 'NA', 'UPDATE'
                       'US',    'QTY_U_WIND_COMPONENT',    'NA', 'NA', 'UPDATE'
                       'VS',    'QTY_V_WIND_COMPONENT',    'NA', 'NA', 'UPDATE'
-                      'Q',     'QTY_SPECIFIC_HUMIDITY',   'NA', 'NA', 'UPDATE'
-                      'CLDLIQ','QTY_CLOUD_LIQUID_WATER',  'NA', 'NA', 'UPDATE'
-                      'CLDICE','QTY_CLOUD_ICE',           'NA', 'NA', 'UPDATE'
+                      'Q',     'QTY_SPECIFIC_HUMIDITY',   '1.0e-30', 'NA', 'UPDATE'
+                      'CLDLIQ','QTY_CLOUD_LIQUID_WATER',  '1.0e-30', 'NA', 'UPDATE'
+                      'CLDICE','QTY_CLOUD_ICE',           '1.0e-30', 'NA', 'UPDATE'
                       'PS',    'QTY_SURFACE_PRESSURE',    'NA', 'NA', 'UPDATE'
    use_log_vertical_scale              = .true.
    use_variable_mean_mass              = .false.
@@ -359,7 +360,7 @@
 
 &ensemble_manager_nml
    layout         = 2
-   tasks_per_node = 16
+   tasks_per_node = 128
    /
 
 

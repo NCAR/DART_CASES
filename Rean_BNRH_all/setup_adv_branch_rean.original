@@ -345,7 +345,7 @@ set user_grid = "${user_grid}/config_grids2.1_oi0.25.xml"
 # of the old config_grids.xml has been moved into them.
 # New SST valid and labeled at 12Z
 setenv sst_dataset \
-   "/glade/work/raeder/Models/CAM_init/SST_ssh/DEPRECATED/avhrr_v2.1-only-v2.201912-202109_12Z_2019-12-30.nc"
+   "/glade/work/raeder/Models/CAM_init/SST_ssh/DEPRECATED/avhrr_v2.1-only-v2.201912-202109_12Z_filled_c211112.nc"
    # I'm using a file in DEPRECATED because it wasn't when I ran the 2020 Reanalysis,
    # and we want to recreate the Rean for a QCEFF test.
    # "/glade/work/raeder/Models/CAM_init/SST_ssh/avhrr_v2.1-only-v2.201912-202209_12Z_filled_c221101.nc"
@@ -1456,14 +1456,14 @@ else     # CONTINUE_RUN == FALSE
       @ inst=1
       while (\$inst <= $num_instances)
 
-         set inst_string = `printf _%04d $inst`
+         set inst_string = \`printf _%04d \$inst\`
 
          ${LINK} -f ${stagedir}/${refcase}.cam\${inst_string}.r.${init_time}.nc  .
 
          # The rs file needs to have the current CASE in the name, not the ref case.
          # Data are not added to these files, so LINK is correct.
          ${LINK} -f ${stagedir}/${refcase}.cam\${inst_string}.rs.${init_time}.nc \
-                               ${case}.cam\${inst_string}.rs.${init_time}.nc 
+                                   ${case}.cam\${inst_string}.rs.${init_time}.nc 
 
          ${LINK} -f ${stagedir}/${refcase}.cpl\${inst_string}.r.${init_time}.nc  .
 

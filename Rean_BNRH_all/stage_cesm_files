@@ -163,7 +163,7 @@ else     # CONTINUE_RUN == FALSE
       @ inst=1
       while ($inst <= 80)
 
-         set inst_string = _0081
+         set inst_string = `printf _%04d $inst`
 
          /usr/bin/ln -s -f /glade/derecho/scratch/raeder/f.e21.FHIST_BGC.f09_025.CAM6assim.011/archive/rest/2019-12-30-00000/f.e21.FHIST_BGC.f09_025.CAM6assim.011.cam${inst_string}.r.2019-12-30-00000.nc  .
 
@@ -173,7 +173,7 @@ else     # CONTINUE_RUN == FALSE
                                Rean_BNRH_all.cam${inst_string}.rs.2019-12-30-00000.nc 
 
          /usr/bin/ln -s -f /glade/derecho/scratch/raeder/f.e21.FHIST_BGC.f09_025.CAM6assim.011/archive/rest/2019-12-30-00000/f.e21.FHIST_BGC.f09_025.CAM6assim.011.cpl${inst_string}.r.2019-12-30-00000.nc  .
-
+# 
          echo "f.e21.FHIST_BGC.f09_025.CAM6assim.011.clm2${inst_string}.r.${restart_time}.nc" >! rpointer.lnd${inst_string}
          echo "f.e21.FHIST_BGC.f09_025.CAM6assim.011.cice${inst_string}.r.${restart_time}.nc" >! rpointer.ice${inst_string}
          echo "f.e21.FHIST_BGC.f09_025.CAM6assim.011.cam${inst_string}.r.${restart_time}.nc"  >! rpointer.atm${inst_string}
@@ -191,8 +191,8 @@ else     # CONTINUE_RUN == FALSE
          @ inst ++
       end
 
-      # At the moment I don't care about carefully limiting the number of links to $NINST links,
-      # So just link all the existing .rh files
+#       # At the moment I don't care about carefully limiting the number of links to $NINST links,
+#       # So just link all the existing .rh files
       /usr/bin/ln -s -f /glade/derecho/scratch/raeder/f.e21.FHIST_BGC.f09_025.CAM6assim.011/archive/rest/2019-12-30-00000/f.e21.FHIST_BGC.f09_025.CAM6assim.011.*.rh*.2019-12-30-00000.nc  .
 
       # There are no instance numbers in these filenames.

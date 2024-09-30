@@ -116,3 +116,195 @@
  ---------------------------------------------------
 2024-09-06 17:35:03: xmlchange success <command> ./xmlchange --id JOB_PRIORITY --val premium  </command>
  ---------------------------------------------------
+2024-09-06 17:44:07: case.submit starting 5934741.desched1
+ ---------------------------------------------------
+2024-09-06 17:44:07: case.submit success 5934741.desched1
+ ---------------------------------------------------
+2024-09-06 21:34:43: case.run starting 5934741.desched1
+ ---------------------------------------------------
+2024-09-06 21:35:44: model execution starting 5934741.desched1
+ ---------------------------------------------------
+2024-09-06 21:36:04: model execution error 
+ERROR: Command: 'mpiexec  --label  --line-buffer  -n 10240 /glade/derecho/scratch/raeder/Rean_BNRH_all/bld/cesm.exe   >> cesm.log.$LID 2>&1 ' failed with error '' from dir '/glade/derecho/scratch/raeder/Rean_BNRH_all/run'
+ ---------------------------------------------------
+2024-09-06 21:36:04: case.run error 
+ERROR: RUN FAIL: Command 'mpiexec  --label  --line-buffer  -n 10240 /glade/derecho/scratch/raeder/Rean_BNRH_all/bld/cesm.exe   >> cesm.log.$LID 2>&1 ' failed
+See log file for details: /glade/derecho/scratch/raeder/Rean_BNRH_all/run/cesm.log.5934741.desched1.240906-213443
+ ---------------------------------------------------
+2024-09-06 23:02:18: case.submit starting 5936422.desched1
+ ---------------------------------------------------
+2024-09-06 23:02:19: case.submit success 5936422.desched1
+ ---------------------------------------------------
+2024-09-06 23:32:51: case.run starting 5936422.desched1
+ ---------------------------------------------------
+2024-09-06 23:33:53: model execution starting 5936422.desched1
+ ---------------------------------------------------
+2024-09-06 23:35:36: model execution error 
+ERROR: Command: 'mpiexec  --label  --line-buffer  -n 10240 /glade/derecho/scratch/raeder/Rean_BNRH_all/bld/cesm.exe   >> cesm.log.$LID 2>&1 ' failed with error '' from dir '/glade/derecho/scratch/raeder/Rean_BNRH_all/run'
+ ---------------------------------------------------
+2024-09-06 23:35:36: case.run error 
+ERROR: RUN FAIL: Command 'mpiexec  --label  --line-buffer  -n 10240 /glade/derecho/scratch/raeder/Rean_BNRH_all/bld/cesm.exe   >> cesm.log.$LID 2>&1 ' failed
+See log file for details: /glade/derecho/scratch/raeder/Rean_BNRH_all/run/cesm.log.5936422.desched1.240906-233251
+ ---------------------------------------------------
+2024-09-08 23:03:27: case.submit starting 5965953.desched1
+ ---------------------------------------------------
+2024-09-08 23:03:27: case.submit success 5965953.desched1
+ ---------------------------------------------------
+2024-09-08 23:23:14: case.run starting 5965953.desched1
+ ---------------------------------------------------
+2024-09-08 23:24:23: model execution starting 5965953.desched1
+ ---------------------------------------------------
+2024-09-08 23:26:10: model execution error 
+ERROR: Command: 'mpiexec  --label  --line-buffer  -n 10240 /glade/derecho/scratch/raeder/Rean_BNRH_all/bld/cesm.exe   >> cesm.log.$LID 2>&1 ' failed with error '' from dir '/glade/derecho/scratch/raeder/Rean_BNRH_all/run'
+ ---------------------------------------------------
+2024-09-08 23:26:10: case.run error 
+ERROR: RUN FAIL: Command 'mpiexec  --label  --line-buffer  -n 10240 /glade/derecho/scratch/raeder/Rean_BNRH_all/bld/cesm.exe   >> cesm.log.$LID 2>&1 ' failed
+See log file for details: /glade/derecho/scratch/raeder/Rean_BNRH_all/run/cesm.log.5965953.desched1.240908-232314
+ ---------------------------------------------------
+2024-09-09 06:23:39: xmlchange success <command> ./xmlchange DATA_ASSIMILATION_CYCLES=1,RESUBMIT=0  </command>
+ ---------------------------------------------------
+2024-09-09 06:23:40: xmlchange success <command> ./xmlchange --subgroup case.run --id JOB_WALLCLOCK_TIME --val 00:19:00  </command>
+ ---------------------------------------------------
+2024-09-09 06:23:40: xmlchange success <command> ./xmlchange --subgroup case.run --id USER_REQUESTED_WALLTIME --val 00:19  </command>
+ ---------------------------------------------------
+2024-09-09 06:23:40: xmlchange success <command> ./xmlchange -f --subgroup case.run --id JOB_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-09-09 06:23:41: xmlchange success <command> ./xmlchange -f --subgroup case.run --id USER_REQUESTED_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-09-09 06:23:41: xmlchange success <command> ./xmlchange --id JOB_PRIORITY --val economy  </command>
+ ---------------------------------------------------
+2024-09-09 06:26:58: case.submit starting 5969186.desched1
+ ---------------------------------------------------
+2024-09-09 06:26:58: case.submit success 5969186.desched1
+ ---------------------------------------------------
+2024-09-09 06:27:15: case.run starting 5969186.desched1
+ ---------------------------------------------------
+2024-09-09 06:28:14: model execution starting 5969186.desched1
+ ---------------------------------------------------
+2024-09-09 06:31:39: model execution success 5969186.desched1
+ ---------------------------------------------------
+2024-09-09 06:31:42: case.run success 5969186.desched1
+ ---------------------------------------------------
+2024-09-09 06:31:59: xmlchange success <command> ./xmlchange CHECK_TIMING=FALSE  </command>
+ ---------------------------------------------------
+2024-09-09 10:12:09: xmlchange success <command> ./xmlchange DATA_ASSIMILATION_CYCLES=1,RESUBMIT=-1  </command>
+ ---------------------------------------------------
+2024-09-09 10:12:09: xmlchange success <command> ./xmlchange --subgroup case.run --id JOB_WALLCLOCK_TIME --val 00:19:00  </command>
+ ---------------------------------------------------
+2024-09-09 10:12:09: xmlchange success <command> ./xmlchange --subgroup case.run --id USER_REQUESTED_WALLTIME --val 00:19  </command>
+ ---------------------------------------------------
+2024-09-09 10:12:10: xmlchange success <command> ./xmlchange -f --subgroup case.run --id JOB_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-09-09 10:12:10: xmlchange success <command> ./xmlchange -f --subgroup case.run --id USER_REQUESTED_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-09-09 10:12:10: xmlchange success <command> ./xmlchange --id JOB_PRIORITY --val premium  </command>
+ ---------------------------------------------------
+2024-09-09 10:20:46: case.submit starting 5970758.desched1
+ ---------------------------------------------------
+2024-09-09 10:20:46: case.submit success 5970758.desched1
+ ---------------------------------------------------
+2024-09-09 13:11:42: xmlchange success <command> ./xmlchange CHECK_TIMING=FALSE  </command>
+ ---------------------------------------------------
+2024-09-10 14:57:49: xmlchange success <command> ./xmlchange DATA_ASSIMILATION_CYCLES=1,RESUBMIT=0  </command>
+ ---------------------------------------------------
+2024-09-10 14:57:50: xmlchange success <command> ./xmlchange --subgroup case.run --id JOB_WALLCLOCK_TIME --val 00:19:00  </command>
+ ---------------------------------------------------
+2024-09-10 14:57:50: xmlchange success <command> ./xmlchange --subgroup case.run --id USER_REQUESTED_WALLTIME --val 00:19  </command>
+ ---------------------------------------------------
+2024-09-10 14:57:50: xmlchange success <command> ./xmlchange -f --subgroup case.run --id JOB_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-09-10 14:57:51: xmlchange success <command> ./xmlchange -f --subgroup case.run --id USER_REQUESTED_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-09-10 14:57:51: xmlchange success <command> ./xmlchange --id JOB_PRIORITY --val premium  </command>
+ ---------------------------------------------------
+2024-09-10 15:04:06: case.submit starting 5997721.desched1
+ ---------------------------------------------------
+2024-09-10 15:04:06: case.submit success 5997721.desched1
+ ---------------------------------------------------
+2024-09-10 15:41:35: case.run starting 5997721.desched1
+ ---------------------------------------------------
+2024-09-10 15:42:58: model execution starting 5997721.desched1
+ ---------------------------------------------------
+2024-09-10 15:46:37: model execution success 5997721.desched1
+ ---------------------------------------------------
+2024-09-10 15:46:42: case.run success 5997721.desched1
+ ---------------------------------------------------
+2024-09-10 15:46:46: xmlchange success <command> ./xmlchange CHECK_TIMING=FALSE  </command>
+ ---------------------------------------------------
+2024-09-11 07:59:34: xmlchange success <command> ./xmlchange DATA_ASSIMILATION_CYCLES=1,RESUBMIT=-1  </command>
+ ---------------------------------------------------
+2024-09-11 07:59:34: xmlchange success <command> ./xmlchange --subgroup case.run --id JOB_WALLCLOCK_TIME --val 00:19:00  </command>
+ ---------------------------------------------------
+2024-09-11 07:59:34: xmlchange success <command> ./xmlchange --subgroup case.run --id USER_REQUESTED_WALLTIME --val 00:19  </command>
+ ---------------------------------------------------
+2024-09-11 07:59:35: xmlchange success <command> ./xmlchange -f --subgroup case.run --id JOB_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-09-11 07:59:35: xmlchange success <command> ./xmlchange -f --subgroup case.run --id USER_REQUESTED_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-09-11 07:59:35: xmlchange success <command> ./xmlchange --id JOB_PRIORITY --val premium  </command>
+ ---------------------------------------------------
+2024-09-11 08:03:59: case.submit starting 6005536.desched1
+ ---------------------------------------------------
+2024-09-11 08:03:59: case.submit success 6005536.desched1
+ ---------------------------------------------------
+2024-09-11 08:19:33: xmlchange success <command> ./xmlchange CHECK_TIMING=FALSE  </command>
+ ---------------------------------------------------
+2024-09-11 08:56:21: case.submit starting 6006230.desched1
+ ---------------------------------------------------
+2024-09-11 08:56:21: case.submit success 6006230.desched1
+ ---------------------------------------------------
+2024-09-11 14:42:30: case.submit starting 6008933.desched1
+ ---------------------------------------------------
+2024-09-11 14:42:30: case.submit success 6008933.desched1
+ ---------------------------------------------------
+2024-09-11 17:03:03: xmlchange success <command> ./xmlchange CHECK_TIMING=FALSE  </command>
+ ---------------------------------------------------
+2024-09-11 17:49:20: case.submit starting 6010824.desched1
+ ---------------------------------------------------
+2024-09-11 17:49:20: case.submit success 6010824.desched1
+ ---------------------------------------------------
+2024-09-11 17:50:27: xmlchange success <command> ./xmlchange CHECK_TIMING=FALSE  </command>
+ ---------------------------------------------------
+2024-09-11 17:56:21: xmlchange success <command> ./xmlchange CHECK_TIMING=FALSE  </command>
+ ---------------------------------------------------
+2024-09-11 22:19:46: xmlchange success <command> ./xmlchange DATA_ASSIMILATION_CYCLES=1,RESUBMIT=0  </command>
+ ---------------------------------------------------
+2024-09-11 22:19:47: xmlchange success <command> ./xmlchange --subgroup case.run --id JOB_WALLCLOCK_TIME --val 00:19:00  </command>
+ ---------------------------------------------------
+2024-09-11 22:19:47: xmlchange success <command> ./xmlchange --subgroup case.run --id USER_REQUESTED_WALLTIME --val 00:19  </command>
+ ---------------------------------------------------
+2024-09-11 22:19:48: xmlchange success <command> ./xmlchange -f --subgroup case.run --id JOB_QUEUE --val preempt  </command>
+ ---------------------------------------------------
+2024-09-11 22:19:48: xmlchange success <command> ./xmlchange -f --subgroup case.run --id USER_REQUESTED_QUEUE --val preempt  </command>
+ ---------------------------------------------------
+2024-09-11 22:23:26: case.submit starting 6012448.desched1
+ ---------------------------------------------------
+2024-09-11 22:23:26: case.submit success 6012448.desched1
+ ---------------------------------------------------
+2024-09-12 13:49:16: case.submit starting 6021382.desched1
+ ---------------------------------------------------
+2024-09-12 13:49:16: case.submit success 6021382.desched1
+ ---------------------------------------------------
+2024-09-12 14:32:23: case.run starting 6021382.desched1
+ ---------------------------------------------------
+2024-09-12 14:33:45: model execution starting 6021382.desched1
+ ---------------------------------------------------
+2024-09-12 14:37:05: model execution error 
+ERROR: Command: 'mpiexec  --label  --line-buffer  -n 10240 /glade/derecho/scratch/raeder/Rean_BNRH_all/bld/cesm.exe   >> cesm.log.$LID 2>&1 ' failed with error '' from dir '/glade/derecho/scratch/raeder/Rean_BNRH_all/run'
+ ---------------------------------------------------
+2024-09-12 14:37:05: case.run error 
+ERROR: RUN FAIL: Command 'mpiexec  --label  --line-buffer  -n 10240 /glade/derecho/scratch/raeder/Rean_BNRH_all/bld/cesm.exe   >> cesm.log.$LID 2>&1 ' failed
+See log file for details: /glade/derecho/scratch/raeder/Rean_BNRH_all/run/cesm.log.6021382.desched1.240912-143223
+ ---------------------------------------------------
+2024-09-30 14:24:48: xmlchange success <command> ./xmlchange DATA_ASSIMILATION_CYCLES=1,RESUBMIT=0  </command>
+ ---------------------------------------------------
+2024-09-30 14:24:48: xmlchange success <command> ./xmlchange --subgroup case.run --id JOB_WALLCLOCK_TIME --val 00:19:00  </command>
+ ---------------------------------------------------
+2024-09-30 14:24:49: xmlchange success <command> ./xmlchange --subgroup case.run --id USER_REQUESTED_WALLTIME --val 00:19  </command>
+ ---------------------------------------------------
+2024-09-30 14:24:49: xmlchange success <command> ./xmlchange -f --subgroup case.run --id JOB_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-09-30 14:24:49: xmlchange success <command> ./xmlchange -f --subgroup case.run --id USER_REQUESTED_QUEUE --val main  </command>
+ ---------------------------------------------------
+2024-09-30 14:24:50: xmlchange success <command> ./xmlchange --id JOB_PRIORITY --val premium  </command>
+ ---------------------------------------------------

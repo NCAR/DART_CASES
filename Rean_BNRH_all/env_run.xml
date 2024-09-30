@@ -253,7 +253,7 @@
       timing tests.
     </desc>
     </entry>
-    <entry id="JOB_IDS">
+    <entry id="JOB_IDS" value="case.run:6021382.desched1">
       <type>char</type>
       <desc>List of job ids for most recent case.submit</desc>
     </entry>
@@ -307,7 +307,7 @@
     </entry>
   </group>
   <group id="run_flags">
-    <entry id="CHECK_TIMING" value="TRUE">
+    <entry id="CHECK_TIMING" value="FALSE">
       <type>logical</type>
       <valid_values>TRUE,FALSE</valid_values>
       <desc>logical to diagnose model timing at the end of the run</desc>
@@ -1545,7 +1545,7 @@
     Sets SST and ice coverage stream name.
     This is only used when DOCN_MODE=prescribed.</desc>
     </entry>
-    <entry id="SSTICE_DATA_FILENAME" value="/glade/work/raeder/Models/CAM_init/SST_ssh/DEPRECATED/avhrr_v2.1-only-v2.201912-202109_12Z_2019-12-30.nc">
+    <entry id="SSTICE_DATA_FILENAME" value="/glade/work/raeder/Models/CAM_init/SST_ssh/DEPRECATED/avhrr_v2.1-only-v2.201912-202109_12Z_filled_c211112.nc">
       <type>char</type>
       <valid_values/>
       <desc>Prescribed SST and ice coverage data file name.

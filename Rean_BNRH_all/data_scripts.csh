@@ -5,12 +5,12 @@
 # used by many non-CESM scripts in the workflow.
 
 setenv  data_NINST            80
-setenv  data_proj_space       /glade/derecho/scratch/raeder/Rean_BNRH_all/project
 setenv  data_DART_src         /glade/u/home/raeder/DART/Manhattan_git
 setenv  data_CASEROOT         /glade/work/raeder/Exp/Rean_BNRH_all_git/Rean_BNRH_all
 setenv  data_CASE             Rean_BNRH_all
 setenv  data_scratch          /glade/derecho/scratch/raeder/Rean_BNRH_all
-setenv  data_campaign         /glade/campaign/cisl/dares/raeder/Reanalyses
+setenv  data_campaign         /glade/campaign/cisl/dares/raeder/QCEFF
+setenv  data_proj_space       ${data_campaign}/Rean_BNRH_all
 setenv  data_CESM_python      /glade/work/raeder/Models/cesm2_1_m5.8/cime/scripts/lib/CIME 
 setenv  data_DOUT_S_ROOT      /glade/derecho/scratch/raeder/Rean_BNRH_all/archive
 
