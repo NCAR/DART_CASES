@@ -18,6 +18,8 @@
 #    on cheyenne only (2022-10), so this script must be used on casper, 
 #    or load the path into the script that calls it.
 
+module load nco udunits
+
 if [ ! -z "$PMI_RANK" ]; then
    line=$(expr $PMI_RANK + 1)
 #    echo "launch_cf.sh using PMI_RANK with line = $line"

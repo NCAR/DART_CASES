@@ -29,13 +29,13 @@
 # derecho 
 # modify mem= after seeing actual usage of a job using qhist.
 #PBS  -q main
-#PBS  -l job_priority=premium
+#PBS  -l job_priority=economy
 # has 128 processors/node
 # For hist: 5 * 80         = 400 /128 = 4 nodes
 # For dart: 1 + 2*(2 + 80) = 165  
 #                            645 /128 = 6
 # For rest: 4 * 80         = 320 /128 = 3
-#PBS  -l select=3:ncpus=128:mpiprocs=128:ompthreads=1:mem=150GB
+#PBS  -l select=3:ncpus=128:mpiprocs=128:ompthreads=1:mem=230GB
 # #PBS  -l select=18:ncpus=128:mpiprocs=128:ompthreads=1:mem=50GB
 # cheyenne
 # #PBS  -q premium
@@ -60,9 +60,9 @@ if (! -f data_scripts.csh) then
 endif
 source data_scripts.csh
 
-set comp_cmd      = 'gzip '
+set comp_cmd      = 'gunzip '
 # set comp_cmd      = 'gzip -k'
-set ymds          = 2019-07-01-00000
+set ymds          = 2020-01-17-00000
 set data_dir      = ${data_DOUT_S_ROOT}/rest/${ymds}
 
 # set sets          = (cpl)

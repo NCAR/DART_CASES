@@ -98,7 +98,8 @@ setenv date 'date --rfc-3339=ns'
 # ------------------------------------------------------------------------------
 # Create the command file where each line is a separate command, task, operation, ....
 
-\rm -f mycmdfile
+# \rm -f mycmdfile
+\mv  mycmdfile ..
 touch mycmdfile
 
 # 'task' is incremented continuously over all files; components, members, etc.
@@ -111,6 +112,7 @@ switch ($comp)
    # FIXME ... the coupler files may or may not have an instance number in them.
    case {clm2,cpl,cam,cice}:
       set i=1
+      echo "Creating $comp mycmdfile at `date`"
       while ( $i <= $data_NINST)
          # E.g. CAM6_80mem.cice_0001.r.2010-07-15-00000.nc
          set file_name = `printf "%s.%s_%04d.r.%s.nc%s" $data_CASE $comp $i $ymds $ext`
@@ -170,6 +172,7 @@ switch ($comp)
 
       # obs_seq.final (no inst)   70% of 1 Gb (ascii) in 35 sec
       # E.g. CAM6_80mem.dart.e.cam_obs_seq_final.2010-07-15-00000
+      echo "Creating dart mycmdfile at `date`"
       set file_name = ${data_CASE}.dart.e.cam_obs_seq_final.${ymds}${ext}
       if (-f $file_name) then
          @ task++
@@ -218,7 +221,8 @@ if ($task > 0) then
    if ($?PBS_O_WORKDIR) then
       # cheyenne: mpiexec_mpt -n $task ${data_CASEROOT}/launch_cf.sh ./mycmdfile
       # derecho
-      mpiexec -n $task ${data_CASEROOT}/launch_cf.sh ./mycmdfile
+      #--label   Add node and rank labels output. (Faster to omit?)
+      mpiexec -n $task --cpu-bind core --ppn 128 --label ${data_CASEROOT}/launch_cf.sh ./mycmdfile
       set mpi_status = $status
    else if ($?SLURM_SUBMIT_DIR) then
       mpirun      -n $task ${data_CASEROOT}/launch_cf.sh ./mycmdfile
@@ -249,8 +253,10 @@ if ($gr_stat == 0) then
    exit 197
 else
    # Compression worked; clean up the .eo files and mycmdfile
-   \rm -f *.eo  mycmdfile
+   \rm -f *.eo  
+   mv mycmdfile ..
 endif
+echo "Finished compress.csh at `date`"
 
 exit 0
 

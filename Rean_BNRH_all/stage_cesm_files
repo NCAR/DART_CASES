@@ -11,7 +11,8 @@
 #  2) be sure 'restart_time' is set to the day and time from which you want to
 #     restart, if not the initial time.
 
-set restart_time = 2019-12-30-00000
+# set restart_time = 2019-12-31-21600
+set restart_time = 2020-01-17-00000
 
 # ---------------------------------------------------------
 # Get the settings for this case from the CESM environment

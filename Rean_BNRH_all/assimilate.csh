@@ -154,7 +154,9 @@ if (! -d ${archive}/esp/hist) mkdir -p ${archive}/esp/hist
 setenv save_stages_freq RESTART_TIMES
 
 # This next line ultimately specifies the location of the observation files.
-set BASEOBSDIR = /glade/campaign/cisl/fs1_p_relocation/dares//Observations/NCEP+ACARS+GPS+AIRS/Thinned_x9x10
+# 2019: set BASEOBSDIR = /glade/campaign/cisl/fs1_p_relocation/dares//Observations/NCEP+ACARS+GPS+AIRS/Thinned_x9x10
+# 2020:
+set BASEOBSDIR = /glade/campaign/cisl/fs1_p_relocation/dares//Observations/NCEP+ACARS+GPS+AIRS/ThinAIRS_9x10-C2+C1
 
 # suppress "rm" warnings if wildcard does not match anything
 set nonomatch
@@ -457,13 +459,14 @@ if ($#log_list >= 3) then
          chmod 655 *${rm_date}.nc
       endif
 
-      echo "compress.csh started at `date`"
-      ${CASEROOT}/compress.csh gzip ${rm_date} "clm2 cpl cam cice" "$stages_all"
-      if ($status != 0) then
-         echo "compress.csh failed at `date`"
-         exit 55
-      endif
-      echo "compress.csh finished at `date`"
+      echo "WARNING: compress.csh NOT started at `date`"
+#       echo "compress.csh started at `date`"
+#       ${CASEROOT}/compress.csh gzip ${rm_date} "clm2 cpl cam cice" "$stages_all"
+#       if ($status != 0) then
+#          echo "compress.csh failed at `date`"
+#          exit 55
+#       endif
+#       echo "compress.csh finished at `date`"
 
       # Save the restart set to archive/rest/$datename,
       # where it will be safe from removes of $component/rest.

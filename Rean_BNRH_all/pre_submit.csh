@@ -161,7 +161,7 @@ echo "$cycles cycles will be distributed among $resubmissions +1 jobs"
 # @ job_minutes = 10 + ( $cycles_per_job * ( 10 + (( $cycles_per_job * 10) / 70 )))
 # 12 hours: @ job_minutes = 720
 
-@ job_minutes = ( $cycles_per_job * 9 ) + 10 
+@ job_minutes = ( $cycles_per_job * 14 ) + 10 
 # @ job_minutes = 12 * 60
 if ($job_minutes > 720) set job_minutes = 720
 @ wall_hours  = $job_minutes / 60
