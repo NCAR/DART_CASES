@@ -1,0 +1,8 @@
+!----------------------------------------------------------------------------------
+! Users should add all user specific namelist changes below in the form of 
+!   namelist_var = new_namelist_value 
+! Note - that it does not matter what namelist group the namelist_var belongs to
+!----------------------------------------------------------------------------------
+
+ 
+ice_ic = 'f.e21.FHIST_BGC.f09_025.CAM6assim.011.cice_0002.r.2019-12-30-00000.nc'
