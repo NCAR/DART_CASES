@@ -1,0 +1,48 @@
+2025-05-31 16:12:44: /glade/work/raeder/Models/cesm2_1_m5.8/cime/scripts/create_newcase --case /glade/work/raeder/Exp/Rean_BNRH_5min_ts_git/Rean_BNRH_5min_ts --machine derecho --res f09_d025 --project ACIS0001 --queue main --walltime 0:20:00 --pecount 128x1 --ninst 40 --compset HIST_CAM60_CLM50%BGC-CROP_CICE%PRES_DOCN%DOM_MOSART_SGLC_SWAV_SIAC --run-unsupported --multi-driver --gridfile /glade/work/raeder/Models/CAM_init/SST_ssh/config_grids2.1_oi0.25.xml
+ ---------------------------------------------------
+2025-05-31 16:12:44: Compset longname is HIST_CAM60_CLM50%BGC-CROP_CICE%PRES_DOCN%DOM_MOSART_SGLC_SWAV_SIAC_SESP
+ ---------------------------------------------------
+2025-05-31 16:12:44: Compset specification file is /glade/work/raeder/Models/cesm2_1_m5.8/components/cam//cime_config/config_compsets.xml
+ ---------------------------------------------------
+2025-05-31 16:12:44: Pes     specification file is /glade/work/raeder/Models/cesm2_1_m5.8/components/cam//cime_config/config_pes.xml
+ ---------------------------------------------------
+2025-05-31 16:12:44: Forcing is Historic transient 
+ ---------------------------------------------------
+2025-05-31 16:12:44: Using None coupler instances
+ ---------------------------------------------------
+2025-05-31 16:12:44: Component ATM is CAM cam6 physics:
+ ---------------------------------------------------
+2025-05-31 16:12:44: ATM_GRID is 0.9x1.25
+ ---------------------------------------------------
+2025-05-31 16:12:44: Component LND is clm5.0:BGC (vert. resol. CN and methane) with prognostic crop:
+ ---------------------------------------------------
+2025-05-31 16:12:44: LND_GRID is 0.9x1.25
+ ---------------------------------------------------
+2025-05-31 16:12:44: Component ICE is Sea ICE (cice) model version 5 :prescribed cice
+ ---------------------------------------------------
+2025-05-31 16:12:44: ICE_GRID is d.25x.25
+ ---------------------------------------------------
+2025-05-31 16:12:44: Component OCN is DOCN   prescribed ocean mode
+ ---------------------------------------------------
+2025-05-31 16:12:44: OCN_GRID is d.25x.25
+ ---------------------------------------------------
+2025-05-31 16:12:44: Component ROF is MOSART: MOdel for Scale Adaptive River Transport
+ ---------------------------------------------------
+2025-05-31 16:12:44: ROF_GRID is r05
+ ---------------------------------------------------
+2025-05-31 16:12:44: Component GLC is Stub glacier (land ice) component
+ ---------------------------------------------------
+2025-05-31 16:12:44: GLC_GRID is null
+ ---------------------------------------------------
+2025-05-31 16:12:44: Component WAV is Stub wave component
+ ---------------------------------------------------
+2025-05-31 16:12:44: WAV_GRID is null
+ ---------------------------------------------------
+2025-05-31 16:12:44: Component IAC is Stub iac component
+ ---------------------------------------------------
+2025-05-31 16:12:44: IAC_GRID is null
+ ---------------------------------------------------
+2025-05-31 16:12:44: Component ESP is Stub external system processing (ESP) component
+ ---------------------------------------------------
+2025-05-31 16:12:44: ESP_GRID is None
+ ---------------------------------------------------
