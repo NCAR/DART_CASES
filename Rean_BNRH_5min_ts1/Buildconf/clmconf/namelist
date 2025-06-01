@@ -1,0 +1,10 @@
+&comp_inparm 
+
+finidat = 'f.e21.FHIST_BGC.f09_025.CAM6assim.011.clm2_0040.r.2019-12-30-00000.nc'
+
+
+hist_empty_htapes = .true.
+
+use_lch4 = .false.
+
+/ 

@@ -1,0 +1,92 @@
+2025-05-31 18:32:30: xmlchange success <command> ./xmlchange ROF_GRID=r05  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:31: xmlchange success <command> ./xmlchange ROOTPE_ATM=0,NTHRDS_ATM=1,NTASKS_ATM=-1  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:31: xmlchange success <command> ./xmlchange ROOTPE_LND=0,NTHRDS_LND=1,NTASKS_LND=-1  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:32: xmlchange success <command> ./xmlchange ROOTPE_ICE=0,NTHRDS_ICE=1,NTASKS_ICE=-1  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:32: xmlchange success <command> ./xmlchange ROOTPE_ROF=0,NTHRDS_ROF=1,NTASKS_ROF=-1  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:32: xmlchange success <command> ./xmlchange ROOTPE_OCN=0,NTHRDS_OCN=1,NTASKS_OCN=-1  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:33: xmlchange success <command> ./xmlchange ROOTPE_GLC=0,NTHRDS_GLC=1,NTASKS_GLC=-1  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:33: xmlchange success <command> ./xmlchange ROOTPE_WAV=0,NTHRDS_WAV=1,NTASKS_WAV=-1  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:34: xmlchange success <command> ./xmlchange ROOTPE_CPL=0,NTHRDS_CPL=1,NTASKS_CPL=-1  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:34: xmlchange success <command> ./xmlchange ROOTPE_ESP=0,NTHRDS_ESP=1,NTASKS_ESP=-1  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:37: xmlchange success <command> ./xmlchange JOB_PRIORITY=premium  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:37: xmlchange success <command> ./xmlchange RUN_TYPE=hybrid  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:37: xmlchange success <command> ./xmlchange RUN_STARTDATE=2018-12-20  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:38: xmlchange success <command> ./xmlchange START_TOD=00000  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:38: xmlchange success <command> ./xmlchange RUN_REFCASE=f.e21.FHIST_BGC.f09_025.CAM6assim.011  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:39: xmlchange success <command> ./xmlchange RUN_REFDATE=2019-12-30  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:39: xmlchange success <command> ./xmlchange RUN_REFTOD=00000  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:39: xmlchange success <command> ./xmlchange GET_REFCASE=FALSE  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:40: xmlchange success <command> ./xmlchange CIME_OUTPUT_ROOT=/glade/derecho/scratch/raeder  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:41: xmlchange success <command> ./xmlchange SSTICE_DATA_FILENAME=/glade/work/raeder/Models/CAM_init/SST_ssh/avhrr-only-v2.2011-202001_0Z_filled_c200810.nc  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:41: xmlchange success <command> ./xmlchange SSTICE_GRID_FILENAME=/glade/work/raeder/Models/CAM_init/SST_ssh/domain.ocn.d025.120821.nc  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:42: xmlchange success <command> ./xmlchange SSTICE_YEAR_ALIGN=2011  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:42: xmlchange success <command> ./xmlchange SSTICE_YEAR_START=2011  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:42: xmlchange success <command> ./xmlchange SSTICE_YEAR_END=2020  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:43: xmlchange success <command> ./xmlchange CALENDAR=GREGORIAN  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:43: xmlchange success <command> ./xmlchange CONTINUE_RUN=FALSE  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:44: xmlchange success <command> ./xmlchange STOP_OPTION=nhours  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:44: xmlchange success <command> ./xmlchange STOP_N=1  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:44: xmlchange success <command> ./xmlchange RESUBMIT=0  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:45: xmlchange success <command> ./xmlchange PIO_TYPENAME=pnetcdf  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:45: xmlchange success <command> ./xmlchange NCPL_BASE_PERIOD=hour  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:46: xmlchange success <command> ./xmlchange ATM_NCPL=12  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:46: xmlchange success <command> ./xmlchange DOUT_S=FALSE  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:46: xmlchange success <command> ./xmlchange DOUT_S_ROOT=/glade/derecho/scratch/raeder/Rean_BNRH_5min_ts1/archive  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:47: xmlchange success <command> ./xmlchange DEBUG=FALSE  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:47: xmlchange success <command> ./xmlchange INFO_DBUG=0  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:48: xmlchange success <command> ./xmlchange RUN_REFDIR=/glade/derecho/scratch/raeder/f.e21.FHIST_BGC.f09_025.CAM6assim.011/archive/rest/2019-12-30-00000  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:48: case.setup starting 9695912.desched1
+ ---------------------------------------------------
+2025-05-31 18:32:51: case.setup success 9695912.desched1
+ ---------------------------------------------------
+2025-05-31 18:32:53: xmlchange success <command> ./xmlchange DATA_ASSIMILATION_ATM=TRUE  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:54: xmlchange success <command> ./xmlchange DATA_ASSIMILATION_CYCLES=1  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:54: xmlchange success <command> ./xmlchange DATA_ASSIMILATION_SCRIPT=/glade/work/raeder/Exp/Rean_BNRH_5min_ts1_git/Rean_BNRH_5min_ts1/assimilate.csh  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:56: xmlchange success <command> ./xmlchange --subgroup case.st_archive --id JOB_QUEUE --val develop  </command>
+ ---------------------------------------------------
+2025-05-31 18:32:56: xmlchange success <command> ./xmlchange --subgroup case.st_archive --id JOB_WALLCLOCK_TIME --val 1:00:00  </command>
+ ---------------------------------------------------
+2025-05-31 18:33:29: case.build starting 
+ ---------------------------------------------------
+2025-05-31 18:42:45: case.build success 
+ ---------------------------------------------------
