@@ -143,8 +143,8 @@ if ($start[3] == "01") ./xmlchange DOUT_S=FALSE
 
 # I won't run more than a month, so I'm leaving the years
 # contribution (0) out of this tally.
-@ cycles = ( $days * 4 ) + ( $secs / 21600 )
-if ($months > 0) @ cycles = $cycles + ( $days_in_mo[$start[2]] * 4 )
+@ cycles = ( $days * 24 ) + ( $secs / 3600 )
+if ($months > 0) @ cycles = $cycles + ( $days_in_mo[$start[2]] * 24 )
 
 @ resubmissions = ( $cycles / $cycles_per_job ) - 1
 if ($resubmissions < 0 && $first_date != $last_date ) then
@@ -161,7 +161,7 @@ echo "$cycles cycles will be distributed among $resubmissions +1 jobs"
 # @ job_minutes = 10 + ( $cycles_per_job * ( 10 + (( $cycles_per_job * 10) / 70 )))
 # 12 hours: @ job_minutes = 720
 
-@ job_minutes = ( $cycles_per_job * 14 ) + 10 
+@ job_minutes = ( $cycles_per_job * 4 ) + 10 
 # @ job_minutes = 12 * 60
 if ($job_minutes > 720) set job_minutes = 720
 @ wall_hours  = $job_minutes / 60

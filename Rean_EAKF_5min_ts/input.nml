@@ -37,7 +37,7 @@
    fix_bound_violations = .false.
    /
 
-qceff_table_filename = 'cam-fv_qceff_table_all_BNRH.csv'
+! qceff_table_filename = 'cam-fv_qceff_table_all_BNRH.csv'
 &algorithm_info_nml
    qceff_table_filename = 'cam-fv_qceff_table_all_EAKF.csv'
    /
@@ -228,7 +228,7 @@ qceff_table_filename = 'cam-fv_qceff_table_all_BNRH.csv'
    model_damping_ends_at_level         = -1
    using_chemistry                = .false.
    assimilation_period_days       = 0
-   assimilation_period_seconds    = 21600
+   assimilation_period_seconds    = 3600
    suppress_grid_info_in_output   = .false.
    debug_level                    = 0
    /
